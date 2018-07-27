@@ -70,6 +70,7 @@ public class FirstTabFragment extends Fragment {
                                     Datalist.add(model);
                                 }
 
+
                                 CategoryAdapter categoryAdapter =  new CategoryAdapter(getActivity(),Datalist);
                                 categoryList.setAdapter(categoryAdapter);
 

@@ -45,6 +45,7 @@
         android:textAlignment="center"
         android:textColor="#fff"
         android:textSize="20sp"
+
         android:layout_marginTop="30dp"
         android:layout_height="wrap_content" />
 
@@ -54,6 +55,7 @@
         android:layout_marginRight="25dp"
         android:textColor="#fff"
         android:id="@+id/password"
+        android:inputType="textPassword"
         android:paddingLeft="45dp"
         android:text="shiv12345"
         android:background="@drawable/uder2"

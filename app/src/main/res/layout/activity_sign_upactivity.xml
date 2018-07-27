@@ -1,9 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg"
     tools:context=".Activity.SignUpactivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:background="#fff"
+            android:padding="10dp"
+            android:hint="FIRST NAME"
+            android:id="@+id/firstname"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:background="#fff"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:id="@+id/lastname"
+            android:hint="LAST NAME"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:background="#fff"
+            android:inputType="textWebEmailAddress"
+            android:layout_marginTop="20dp"
+            android:id="@+id/email"
+            android:padding="10dp"
+            android:hint="EMAIL"
+            android:layout_height="match_parent" />
+
+
+      <Spinner
+          android:layout_width="match_parent"
+          android:background="#fff"
+          android:id="@+id/category"
+          android:padding="10dp"
+          android:layout_marginTop="20dp"
+          android:layout_height="wrap_content">
+
+      </Spinner>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:background="#fff"
+            android:inputType="phone"
+            android:id="@+id/mobile"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:hint="MOBILE"
+            android:layout_height="match_parent" />
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:background="#fff"
+            android:inputType="textPassword"
+            android:layout_marginTop="20dp"
+            android:id="@+id/password"
+            android:padding="10dp"
+            android:hint="PASSWORD"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:background="@drawable/sbtn"
+            android:id="@+id/submit"
+            android:layout_marginTop="20dp"
+            android:layout_height="50dp" />
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

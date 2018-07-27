@@ -7,4 +7,5 @@ public class API {
     public static String SUBCATEGORY = Domain+"Builders/builder_category_list_api";
     public static String LOGIN  = Domain+"Builders/login_api";
     public static  String IMG_PATH = Domain+"upload/builder_category/";
+    public static String  SIGNUP = Domain+"Builders/signup_api";
 }

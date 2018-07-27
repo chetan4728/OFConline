@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -43,6 +44,20 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText email = (EditText)findViewById(R.id.email);
         final EditText password = (EditText)findViewById(R.id.password);
+
+
+        Bundle bundle = getIntent().getExtras();
+
+        // Toast.makeText(this, ""+Array, Toast.LENGTH_SHORT).show();
+        if (this.getIntent().getExtras() != null && this.getIntent().getExtras().containsKey("email")) {
+        String get_email = bundle.getString("email");
+        String get_password = bundle.getString("password");
+        email.setText(get_email);
+        password.setText(get_password);
+
+
+}
+
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override

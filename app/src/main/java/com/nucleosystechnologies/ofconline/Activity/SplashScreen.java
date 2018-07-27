@@ -50,5 +50,15 @@ public class SplashScreen extends AppCompatActivity {
                // finish();
             }
         });
+
+        signup_activity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i =  new Intent(SplashScreen.this,SignUpactivity.class);
+                startActivity(i);
+                // finish();
+            }
+        });
     }
 }

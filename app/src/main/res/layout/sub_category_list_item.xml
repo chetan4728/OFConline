@@ -6,6 +6,8 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:orientation="horizontal"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     android:layout_marginTop="20px"
     android:layout_height="match_parent">
       <ImageView
@@ -69,27 +71,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_marginBottom="10px"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_height="wrap_content">
 
         <Button
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_weight="1"
             android:textSize="10sp"
-
-            android:text="Call Now "
-            android:layout_height="wrap_content" />
+            android:id="@+id/call"
+            android:background="@drawable/call"
+            android:layout_height="30dp" />
         <Button
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_weight="1"
-            android:text="Email"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/mail"
+            android:id="@+id/email"
             android:textSize="10sp"
-            android:layout_height="wrap_content" />
+            android:layout_height="30dp" />
         <Button
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/watsup"
             android:textSize="10sp"
-            android:text="Whats App"
-            android:layout_height="wrap_content" />
+            android:background="@drawable/watsup"
+            android:layout_height="30dp" />
 
     </LinearLayout>
 

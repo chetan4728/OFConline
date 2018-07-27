@@ -2,6 +2,8 @@ package com.nucleosystechnologies.ofconline.Fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -52,6 +54,11 @@ public class SubCatFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_sub_cat, container, false);
         final ListView subcategory = (ListView)view.findViewById(R.id.subcategory);
+
+
+
+
+
         final ProgressDialog pDialog = new ProgressDialog(getActivity());
 
         pDialog.setMessage("Showing Data");
@@ -119,6 +126,13 @@ public class SubCatFragment extends Fragment {
         };
         VolllyRequest.getInstance(getActivity()).addToRequestQueue(stringRequest);
         return view;
+    }
+
+    public void call()
+    {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("23423423"));
+        startActivity(callIntent);
     }
 
 }

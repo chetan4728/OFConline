@@ -1,5 +1,6 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,6 +37,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     ArrayList<String> MenuName;
     ArrayList<Integer> ImageList;
     private ViewPager viewPager;
+    String Full_name;
     private android.app.ActionBar actionBar;
     private String[] tabs = { "Top Rated", "Games", "Movies" };
     @Override
@@ -74,9 +76,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         try {
             JSONArray array = new JSONArray(Array);
-            String Full_name = array.getJSONObject(0).getString("first_name")+" "+array.getJSONObject(0).getString("last_name");
+             Full_name = array.getJSONObject(0).getString("first_name")+" "+array.getJSONObject(0).getString("last_name");
 
             TextView nameTitle = (TextView)findViewById(R.id.nameTitle);
+
             nameTitle.setText("Hello "+Full_name);
 
         } catch (JSONException e) {
@@ -124,6 +127,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dashboard, menu);
+
         return true;
     }
 
@@ -138,6 +142,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         if (id == R.id.action_settings) {
             return true;
         }
+        else  if (id == R.id.profile) {
+            Intent intent = new Intent(Dashboard.this,UserProfile.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("full_name",Full_name);
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+        }
+        else  if (id == R.id.logout) {
+            Intent intent = new Intent(Dashboard.this,LoginActivity.class);;
+            startActivity(intent);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }

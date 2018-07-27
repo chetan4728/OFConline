@@ -1,14 +1,21 @@
 package com.nucleosystechnologies.ofconline.Adapter;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nucleosystechnologies.ofconline.Fragments.SubCatFragment;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.Model.SubCategoryModel;
 import com.nucleosystechnologies.ofconline.R;
@@ -45,24 +52,40 @@ public class SubCategoryAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final SubCategoryModel cat = Datalist.get(i);
-        if(view==null)
-        {
-            LayoutInflater inflater =  (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.sub_category_list_item,null);
+        if (view == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.sub_category_list_item, null);
         }
-        TextView name = (TextView)view.findViewById(R.id.name);
-        TextView address = (TextView)view.findViewById(R.id.address);
-        TextView address1 = (TextView)view.findViewById(R.id.address1);
-        name.setText(cat.getFirst_name()+" "+cat.getLast_name());
-        address.setText(cat.getAdrs()+" ");
-        address1.setText(cat.getCountry()+" "+cat.getState()+" "+cat.getCity()+" "+cat.getZipcode());
-
+        TextView name = (TextView) view.findViewById(R.id.name);
+        TextView address = (TextView) view.findViewById(R.id.address);
+        TextView address1 = (TextView) view.findViewById(R.id.address1);
+        name.setText(cat.getFirst_name() + " " + cat.getLast_name());
+        address.setText(cat.getAdrs() + " ");
+        address1.setText(cat.getCountry() + " " + cat.getState() + " " + cat.getCity() + " " + cat.getZipcode());
+        Button call = (Button) view.findViewById(R.id.call);
+        Button email = (Button) view.findViewById(R.id.email);
+        Button watsup = (Button) view.findViewById(R.id.watsup);
         ImageView cat_img = (ImageView) view.findViewById(R.id.cat_img);
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(context instanceof IMethodCaller){
+                    ((IMethodCaller)context).call();
+                }
+
+            }
+        });
+
 
       //Log.i("IMAGE",API.IMG_PATH+cat.getImg());
         Picasso.with(context).load(R.drawable.man).placeholder(R.drawable.place).resize(150, 150)
                 .centerInside().into(cat_img);
 
         return view;
+    }
+
+    public interface IMethodCaller{
+        void call();
     }
 }
