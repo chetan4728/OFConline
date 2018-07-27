@@ -70,21 +70,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         navigationView.setNavigationItemSelectedListener(this);
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
-        Bundle bundle = getIntent().getExtras();
-        String Array = bundle.getString("Array");
-       // Toast.makeText(this, ""+Array, Toast.LENGTH_SHORT).show();
 
-        try {
-            JSONArray array = new JSONArray(Array);
-             Full_name = array.getJSONObject(0).getString("first_name")+" "+array.getJSONObject(0).getString("last_name");
 
-            TextView nameTitle = (TextView)findViewById(R.id.nameTitle);
+        TextView nameTitle = (TextView)findViewById(R.id.nameTitle);
 
-            nameTitle.setText("Hello "+Full_name);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        nameTitle.setText("Hello User");
 
 
         MenuName = new ArrayList<>();
@@ -145,7 +135,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         else  if (id == R.id.profile) {
             Intent intent = new Intent(Dashboard.this,UserProfile.class);
             Bundle bundle = new Bundle();
-            bundle.putString("full_name",Full_name);
+            bundle.putString("full_name","Hello User");
             intent.putExtras(bundle);
             startActivity(intent);
 

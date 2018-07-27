@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,18 +50,26 @@ public class CategoryAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final CategoryModel cat = Datalist.get(i);
+        View convertview;
+
+
+
         if(view==null)
         {
             LayoutInflater inflater =  (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.top_rated_category_item,null);
+            convertview = inflater.inflate(R.layout.top_rated_category_item,null);
+            convertview.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+            convertview.setTag(cat.getCategory_id());
+        }else {
+            convertview = view;
         }
 
-        ImageView cat_img = (ImageView) view.findViewById(R.id.full_image_view);
-        TextView title =(TextView)view.findViewById(R.id.title);
+        ImageView cat_img = (ImageView) convertview.findViewById(R.id.full_image_view);
+        TextView title =(TextView)convertview.findViewById(R.id.title);
 
 
         title.setText(cat.getName());
-        view.setOnClickListener(new View.OnClickListener() {
+        convertview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -80,6 +89,6 @@ public class CategoryAdapter extends BaseAdapter {
         Picasso.with(context).load(IMG_PATH+cat.getImg()).placeholder(R.drawable.place).resize(150, 150)
                 .centerInside().into(cat_img);
 
-        return view;
+        return convertview;
     }
 }

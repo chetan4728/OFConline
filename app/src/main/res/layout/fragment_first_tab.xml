@@ -14,12 +14,10 @@
         android:id="@+id/categoryList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numColumns="auto_fit"
-        android:columnWidth="98dp"
-        android:horizontalSpacing="5dp"
-        android:verticalSpacing="5dp"
-        android:gravity="center"
-        android:stretchMode="spacingWidth" ></GridView>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:numColumns="3"
+     ></GridView>
 </LinearLayout>
 
 </FrameLayout>

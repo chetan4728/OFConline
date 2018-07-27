@@ -8,31 +8,25 @@
     android:background="@drawable/bg"
     tools:context=".Activity.SplashScreen">
 
-
-    <ImageView
-        android:layout_width="180dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="120dp"
-        android:background="@drawable/logo"
-        android:layout_height="120dp" />
-
-    <ImageView
+<LinearLayout
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="match_parent">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="100dp"
-        android:id="@+id/login_activity"
-        android:background="@drawable/b1"
-        android:layout_height="50dp" />
+        android:gravity="center"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="30dp"
-        android:id="@+id/signup_activity"
-        android:background="@drawable/b2"
-        android:layout_height="50dp" />
+        <ImageView
+            android:layout_width="180dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/logo"
+            android:layout_height="120dp" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
 
 
 </LinearLayout>

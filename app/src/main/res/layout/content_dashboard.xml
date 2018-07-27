@@ -12,19 +12,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:background="#ddd"
+        android:background="#00A594"
         android:layout_height="wrap_content">
 
         <EditText
             android:layout_width="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/border"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:elevation="5dp"
             android:layout_marginTop="10dp"
+            android:background="#fff"
             android:focusable="true"
+            android:hint="Serach for product &amp; services"
             android:focusableInTouchMode="true"
             android:layout_marginBottom="10dp"
-            android:padding="10dp"
+            android:padding="5dp"
             android:layout_weight="1"
             android:drawableRight="@android:drawable/ic_menu_search"
             android:layout_height="wrap_content" />

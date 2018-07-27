@@ -32,8 +32,10 @@
             android:name=".Activity.SubCategory"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:name=".Activity.UserProfile"></activity>
+            android:name=".Activity.UserProfile"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".Activity.OTPScreen" android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".Activity.OTPConfirmation" android:windowSoftInputMode="stateAlwaysHidden" ></activity>
     </application>
 
 </manifest>
