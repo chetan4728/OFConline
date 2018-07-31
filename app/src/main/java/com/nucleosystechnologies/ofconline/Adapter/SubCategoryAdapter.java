@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nucleosystechnologies.ofconline.Activity.SubCategory;
 import com.nucleosystechnologies.ofconline.Fragments.SubCatFragment;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.Model.SubCategoryModel;
 import com.nucleosystechnologies.ofconline.R;
 import com.squareup.picasso.Picasso;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 import static com.nucleosystechnologies.ofconline.Utility.API.IMG_PATH;
@@ -56,7 +59,7 @@ public class SubCategoryAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.sub_category_list_item, null);
         }
-        TextView name = (TextView) view.findViewById(R.id.name);
+        final TextView name = (TextView) view.findViewById(R.id.name);
         TextView address = (TextView) view.findViewById(R.id.address);
         TextView address1 = (TextView) view.findViewById(R.id.address1);
         name.setText(cat.getFirst_name() + " " + cat.getLast_name());
@@ -70,9 +73,10 @@ public class SubCategoryAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                if(context instanceof IMethodCaller){
-                    ((IMethodCaller)context).call();
-                }
+                Intent intent= new Intent(context,SubCategory.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("category_id",cat.getCategory_id());
+                context.startActivity(intent);
 
             }
         });
@@ -85,7 +89,5 @@ public class SubCategoryAdapter extends BaseAdapter {
         return view;
     }
 
-    public interface IMethodCaller{
-        void call();
-    }
+
 }

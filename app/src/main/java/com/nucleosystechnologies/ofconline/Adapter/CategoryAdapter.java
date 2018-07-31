@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.nucleosystechnologies.ofconline.Utility.API.IMG_PATH;
 
 public class CategoryAdapter extends BaseAdapter {
@@ -75,6 +76,8 @@ public class CategoryAdapter extends BaseAdapter {
 
 
                 Intent i = new Intent(context, SubCategory.class);
+                i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+
                 Bundle bundle = new Bundle();
                 bundle.putInt("Category_id",cat.getCategory_id());
                 bundle.putString("cate_name",cat.getName());

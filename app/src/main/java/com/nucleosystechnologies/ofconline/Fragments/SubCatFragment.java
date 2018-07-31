@@ -46,13 +46,14 @@ public class SubCatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view;
+        view = inflater.inflate(R.layout.fragment_sub_cat, container, false);
         Bundle bundle = this.getArguments();
         final int category_id = bundle.getInt("category_id");
 
         final String cat_id = String.valueOf(category_id).toString();
 
 
-        view = inflater.inflate(R.layout.fragment_sub_cat, container, false);
+
         final ListView subcategory = (ListView)view.findViewById(R.id.subcategory);
 
 
