@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nucleosystechnologies.ofconline.Activity.LoginActivity;
 import com.nucleosystechnologies.ofconline.Activity.SubCategory;
 import com.nucleosystechnologies.ofconline.Fragments.SubCatFragment;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.time.Instant;
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.nucleosystechnologies.ofconline.Utility.API.IMG_PATH;
 
 public class SubCategoryAdapter extends BaseAdapter {
@@ -69,20 +71,34 @@ public class SubCategoryAdapter extends BaseAdapter {
         Button email = (Button) view.findViewById(R.id.email);
         Button watsup = (Button) view.findViewById(R.id.watsup);
         ImageView cat_img = (ImageView) view.findViewById(R.id.cat_img);
+
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent= new Intent(context,SubCategory.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("category_id",cat.getCategory_id());
-                context.startActivity(intent);
+
+            }
+        });
+
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
+
+        watsup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
 
             }
         });
 
 
-      //Log.i("IMAGE",API.IMG_PATH+cat.getImg());
+
+        //Log.i("IMAGE",API.IMG_PATH+cat.getImg());
         Picasso.with(context).load(R.drawable.man).placeholder(R.drawable.place).resize(150, 150)
                 .centerInside().into(cat_img);
 

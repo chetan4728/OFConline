@@ -42,17 +42,20 @@ public class SubCategory extends AppCompatActivity {
 
 
 
-        final int category_id = getIntent().getExtras().getInt("category_id");
+        final int category_id = getIntent().getExtras().getInt("Category_id");
 
         final String cat_id = String.valueOf(category_id).toString();
 
-
+       // Toast.makeText(this, ""+cat_id, Toast.LENGTH_SHORT).show();
 
         final ListView subcategory = (ListView)findViewById(R.id.subcategory);
 
 
 
+        final ProgressDialog pDialog = new ProgressDialog(this);
 
+        pDialog.setMessage("Loading Data ...");
+        pDialog.show();
 
 
         Datalist = new ArrayList<>();
@@ -60,7 +63,7 @@ public class SubCategory extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(getApplicationContext(), ""+response, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getApplicationContext(), ""+response, Toast.LENGTH_SHORT).show();
                         // Log.i("reponse",response);
 
                         try {
@@ -86,7 +89,7 @@ public class SubCategory extends AppCompatActivity {
                                 SubCategoryAdapter subCategoryAdapter =  new SubCategoryAdapter(getApplicationContext(),Datalist);
                                 subcategory.setAdapter(subCategoryAdapter);
 
-
+                                pDialog.hide();
                             }
                             else if (obj.getString("status").equals("400"))
                             {

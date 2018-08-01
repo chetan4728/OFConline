@@ -65,6 +65,13 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="40dp"
         android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:hint="Enter OTP"
+
+        android:id="@+id/hideotp"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
 
     <com.nucleosystechnologies.ofconline.Utility.MyTextView
         android:layout_width="match_parent"

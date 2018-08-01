@@ -1,6 +1,8 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,9 @@ import com.nucleosystechnologies.ofconline.R;
 
 public class SplashScreen extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 3000;
+    SharedPreferences sharedPreferences;
+    public static final String mypreference = "mypref";
+    public static final String Mobile = "Mobile";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +27,8 @@ public class SplashScreen extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
-
+        sharedPreferences = getSharedPreferences(mypreference,
+                Context.MODE_PRIVATE);
 
         if (Build.VERSION.SDK_INT > 10) {
             int flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -49,9 +55,14 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashScreen.this, OTPScreen.class);
-                startActivity(i);
-
+                if (sharedPreferences.contains(Mobile)) {
+                    Intent i = new Intent(SplashScreen.this, Dashboard.class);
+                    startActivity(i);
+                }
+                else {
+                    Intent i = new Intent(SplashScreen.this, OTPScreen.class);
+                    startActivity(i);
+                }
                 // close this activity
                 finish();
             }

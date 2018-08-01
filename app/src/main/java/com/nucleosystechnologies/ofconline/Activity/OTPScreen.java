@@ -94,6 +94,7 @@ public class OTPScreen extends AppCompatActivity {
                 Intent intent =  new Intent(OTPScreen.this,OTPConfirmation.class);
                 Bundle bundle =  new Bundle();
                 bundle.putString("mobile",ccp.getDefaultCountryCodeWithPlus()+" "+Mobile_number.getText());
+                bundle.putString("mobile_number", String.valueOf(Mobile_number.getText()));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 dialog.dismiss();

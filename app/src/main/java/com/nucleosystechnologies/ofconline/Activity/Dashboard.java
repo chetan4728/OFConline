@@ -36,6 +36,7 @@ import com.nucleosystechnologies.ofconline.Model.Addvertise_model;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
+import com.nucleosystechnologies.ofconline.Utility.MyGridView;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 
 import org.json.JSONArray;
@@ -111,7 +112,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
 
 
-        final GridView categoryList = (GridView)findViewById(R.id.categoryList);
+        final MyGridView categoryList = (MyGridView)findViewById(R.id.categoryList);
 
         Datalist = new ArrayList<>();
         AddData =  new ArrayList<>();
@@ -164,6 +165,14 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         loadSlider();
+        TextView service = (TextView)findViewById(R.id.service);
+        service.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dashboard.this,LoginActivity.class);;
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

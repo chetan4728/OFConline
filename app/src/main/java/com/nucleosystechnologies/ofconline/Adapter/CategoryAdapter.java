@@ -77,7 +77,7 @@ public class CategoryAdapter extends BaseAdapter {
 
                 Intent i = new Intent(context, SubCategory.class);
                 i.addFlags(FLAG_ACTIVITY_NEW_TASK);
-
+                //Toast.makeText(context, ""+cat.getCategory_id(), Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putInt("Category_id",cat.getCategory_id());
                 bundle.putString("cate_name",cat.getName());

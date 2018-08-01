@@ -8,4 +8,7 @@ public class API {
     public static String LOGIN  = Domain+"Builders/login_api";
     public static  String IMG_PATH = Domain+"upload/builder_category/";
     public static String  SIGNUP = Domain+"Builders/signup_api";
+    public static String  SENDOTP = Domain+"Builders/sendOTP";
+    public static String  EXPIRED = Domain+"Builders/expireotp";
+    public static String  VERFYOTP = Domain+"Builders/verfyotp";
 }
