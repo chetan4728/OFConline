@@ -26,6 +26,7 @@
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="#333"
             android:layout_marginLeft="10dp"
             android:id="@+id/name"
 
@@ -44,6 +45,7 @@
             <com.nucleosystechnologies.ofconline.Utility.MyTextView
                 android:layout_width="250dp"
                 android:id="@+id/address"
+                android:textColor="#333"
                 android:layout_marginLeft="5dp"
                 android:textSize="12sp"
 
@@ -61,6 +63,7 @@
             android:id="@+id/address1"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
+            android:textColor="#333"
             android:layout_marginLeft="15dp"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content" />

@@ -34,8 +34,15 @@
         <activity
             android:name=".Activity.UserProfile"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".Activity.OTPScreen" android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".Activity.OTPConfirmation" android:windowSoftInputMode="stateAlwaysHidden" ></activity>
+        <activity
+            android:name=".Activity.OTPScreen"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Activity.OTPConfirmation"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".Activity.AboutUs" />
+        <activity android:name=".Activity.ContactUs" />
+        <activity android:name=".Activity.Services"></activity>
     </application>
 
 </manifest>
