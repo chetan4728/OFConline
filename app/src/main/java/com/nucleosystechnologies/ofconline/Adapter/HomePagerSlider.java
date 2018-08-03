@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.nucleosystechnologies.ofconline.Model.Addvertise_model;
 import com.nucleosystechnologies.ofconline.R;
+import com.nucleosystechnologies.ofconline.Utility.API;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class HomePagerSlider extends PagerAdapter {
 
 
         Picasso.with(Context.getApplicationContext())
-                .load(R.drawable.place)
+                .load(API.ADVERTISE_IMG+SliderModelPos.getImg())
                 .placeholder(R.drawable.place)
                 .into(im_slider);
 

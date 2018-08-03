@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText email = (EditText)findViewById(R.id.email);
         final EditText password = (EditText)findViewById(R.id.password);
-
+        final  TextView signup = (TextView)findViewById(R.id.signup);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -57,7 +57,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
 }
-
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =  new Intent(LoginActivity.this,SignUpactivity.class);
+                startActivity(i);
+            }
+        });
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                                  JSONArray jsonArray = obj.getJSONArray("data");
                                  Bundle bundle = new Bundle();
                                  bundle.putString("Array",jsonArray.toString());
-                                 Intent i =  new Intent(LoginActivity.this,Dashboard.class);
+                                 Intent i =  new Intent(LoginActivity.this,SellerDashboard.class);
                                  i.putExtras(bundle);
                                  startActivity(i);
                              }
