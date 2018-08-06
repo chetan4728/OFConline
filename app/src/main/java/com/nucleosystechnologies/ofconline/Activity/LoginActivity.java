@@ -1,7 +1,9 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
 import com.nucleosystechnologies.ofconline.Utility.AppController;
+import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 
 import org.json.JSONArray;
@@ -35,6 +38,8 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
+
+    AppSharedPreferences app;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         final  TextView signup = (TextView)findViewById(R.id.signup);
 
         Bundle bundle = getIntent().getExtras();
+        app =  new AppSharedPreferences(this);
 
         // Toast.makeText(this, ""+Array, Toast.LENGTH_SHORT).show();
         if (this.getIntent().getExtras() != null && this.getIntent().getExtras().containsKey("email")) {
@@ -112,15 +118,29 @@ public class LoginActivity extends AppCompatActivity {
 
                         try {
                             JSONObject obj = new JSONObject(response);
+
+                           // Log.i("detail",response);
                              if(obj.getString("status").equals("200"))
                              {
 
 
                                  JSONArray jsonArray = obj.getJSONArray("data");
+
+                                 //Toast.makeText(LoginActivity.this,jsonArray.getJSONObject(0).getString("mast_id"), Toast.LENGTH_SHORT).show();
+
+                                 app.editor.putString(AppSharedPreferences.FirstName,jsonArray.getJSONObject(0).getString("first_name"));
+                                 app.editor.putString(AppSharedPreferences.LastName,jsonArray.getJSONObject(0).getString("last_name"));
+                                 app.editor.putString(AppSharedPreferences.Email,jsonArray.getJSONObject(0).getString("user_email"));
+                                 app.editor.putString(AppSharedPreferences.mast_id,jsonArray.getJSONObject(0).getString("mast_id"));
+                                 app.editor.commit();
+
                                  Bundle bundle = new Bundle();
+
+
+
                                  bundle.putString("Array",jsonArray.toString());
                                  Intent i =  new Intent(LoginActivity.this,SellerDashboard.class);
-                                 i.putExtras(bundle);
+                               i.putExtras(bundle);
                                  startActivity(i);
                              }
                              else if (obj.getString("status").equals("400"))

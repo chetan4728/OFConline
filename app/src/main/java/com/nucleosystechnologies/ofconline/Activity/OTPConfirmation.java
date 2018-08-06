@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
+import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 
 import org.json.JSONArray;
@@ -39,9 +40,7 @@ public class OTPConfirmation extends AppCompatActivity {
     String MobileNumber;
     EditText otpget;
     TextView hideotp;
-    public static final String mypreference = "mypref";
-    public static final String Mobile = "Mobile";
-    SharedPreferences sharedPreferences;
+    AppSharedPreferences appSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +53,7 @@ public class OTPConfirmation extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
-        sharedPreferences = getSharedPreferences(mypreference,
-                Context.MODE_PRIVATE);
+          appSharedPreferences =  new AppSharedPreferences(this);
 
         if (Build.VERSION.SDK_INT > 10) {
             int flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -259,9 +257,9 @@ public class OTPConfirmation extends AppCompatActivity {
                                 startActivity(intent);
                                 finishAffinity();
 
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString(Mobile, MobileNumber);
-                                editor.commit();
+
+                                appSharedPreferences.editor.putString(appSharedPreferences.Mobile, MobileNumber);
+                                appSharedPreferences.editor.commit();
 
 
                             }

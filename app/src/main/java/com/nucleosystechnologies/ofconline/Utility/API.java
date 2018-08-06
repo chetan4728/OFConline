@@ -16,5 +16,6 @@ public class API {
     public static String  contact_us_api = Domain+"Builders/contact_us_api";
     public static String  services_api = Domain+"Builders/services_api";
   public static  String ADVERTISE_IMG = Domain+"upload/advertise/";
+  public static String  Upload_img = Domain+"Builders/upload_img_server";
 
 }

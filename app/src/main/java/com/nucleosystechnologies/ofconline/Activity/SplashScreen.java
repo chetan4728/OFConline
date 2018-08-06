@@ -13,12 +13,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.nucleosystechnologies.ofconline.R;
+import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
 
 public class SplashScreen extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 3000;
-    SharedPreferences sharedPreferences;
-    public static final String mypreference = "mypref";
-    public static final String Mobile = "Mobile";
+    AppSharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +27,7 @@ public class SplashScreen extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
-        sharedPreferences = getSharedPreferences(mypreference,
-                Context.MODE_PRIVATE);
+        sharedPreferences =  new AppSharedPreferences(this);
 
         if (Build.VERSION.SDK_INT > 10) {
             int flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -55,12 +54,12 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                if (sharedPreferences.contains(Mobile)) {
-                    Intent i = new Intent(SplashScreen.this, Dashboard.class);
+                if (sharedPreferences.pref.getString(sharedPreferences.Mobile,"").isEmpty()) {
+                    Intent i = new Intent(SplashScreen.this, OTPScreen.class);
                     startActivity(i);
                 }
                 else {
-                    Intent i = new Intent(SplashScreen.this, OTPScreen.class);
+                    Intent i = new Intent(SplashScreen.this, Dashboard.class);
                     startActivity(i);
                 }
                 // close this activity

@@ -1,7 +1,9 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,6 +38,7 @@ import com.nucleosystechnologies.ofconline.Model.Addvertise_model;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
+import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
 import com.nucleosystechnologies.ofconline.Utility.MyGridView;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 
@@ -55,6 +58,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     ArrayList<Addvertise_model> AddData;
     private ViewPager Viewpager;
 
+    AppSharedPreferences sharedPreferences;
+
     String Full_name;
     private android.app.ActionBar actionBar;
     private String[] tabs = { "Top Rated", "Games", "Movies" };
@@ -66,7 +71,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-
+        sharedPreferences =  new AppSharedPreferences(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +84,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView MenuIcon = (ListView)findViewById(R.id.MenuIcon);
 
+
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -86,8 +93,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
+        drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+        View header=navigationView.getHeaderView(0);
+        TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
+        headrmobile.setText(sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
 
 
 
@@ -170,8 +180,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Dashboard.this,LoginActivity.class);;
-                startActivity(intent);
+
+               // Toast.makeText(Dashboard.this, ""+sharedPreferences.pref.getString(sharedPreferences.FirstName,""), Toast.LENGTH_SHORT).show();
+                if(sharedPreferences.pref.getString(sharedPreferences.mast_id,"").isEmpty()) {
+                    Intent intent = new Intent(Dashboard.this, LoginActivity.class);
+                    ;
+                    startActivity(intent);
+                }
+                else
+                {
+                    Intent intent = new Intent(Dashboard.this, SellerDashboard.class);
+
+                    startActivity(intent);
+                }
             }
         });
     }

@@ -1,11 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Activity.SellerDashboard"
+    android:orientation="vertical"
     tools:showIn="@layout/app_bar_seller_dashboard">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:textColor="@color/colorPrimary"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:text="Add Advertisement"
+        android:elevation="10dp"
+        android:background="#fff"
+        android:layout_height="wrap_content" />
+
+      <ImageView
+          android:layout_width="300dp"
+         android:layout_marginTop="10dp"
+          android:layout_gravity="center_horizontal"
+          android:id="@+id/priew"
+
+          android:background="@drawable/place"
+          android:scaleType="fitXY"
+          android:adjustViewBounds="true"
+          android:layout_height="150dp" />
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/uploadimg"
+        android:text="Upload Image"
+        android:background="@color/colorPrimary"
+        android:textColor="#fff"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/add_name"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:hint="Enter Name"
+        android:layout_marginRight="20dp"
+        android:layout_height="50dp" />
+    <Spinner
+        android:layout_width="match_parent"
+        android:background="@drawable/border"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/category"
+        android:layout_marginTop="20dp"
+        android:layout_height="40dp"></Spinner>
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/uploadAdd"
+        android:text="Submit Add"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
