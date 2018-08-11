@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nucleosystechnologies.ofconline.Activity.AboutUs;
+import com.nucleosystechnologies.ofconline.Activity.AdvertiseListing;
 import com.nucleosystechnologies.ofconline.Activity.ContactUs;
 import com.nucleosystechnologies.ofconline.Activity.Dashboard;
 import com.nucleosystechnologies.ofconline.Activity.Services;
@@ -87,6 +88,12 @@ public class menu_content_adapter extends BaseAdapter{
                 else if(catname.trim().equals("Contact Us"))
                 {
                     Intent i = new Intent(context, ContactUs.class);
+                    i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+                }
+                else if(catname.trim().equals("Advertisement"))
+                {
+                    Intent i = new Intent(context, AdvertiseListing.class);
                     i.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                 }

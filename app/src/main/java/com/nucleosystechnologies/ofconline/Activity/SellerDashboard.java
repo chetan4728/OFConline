@@ -1,20 +1,31 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.Layout;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +35,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,7 +63,9 @@ import com.nucleosystechnologies.ofconline.Adapter.menu_content_adapter;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
+import com.nucleosystechnologies.ofconline.Utility.AppController;
 import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
+import com.nucleosystechnologies.ofconline.Utility.Utility;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 
 import org.json.JSONArray;
@@ -55,7 +73,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -63,28 +88,45 @@ public class SellerDashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<String> MenuName;
     ArrayList<Integer> ImageList;
-    ArrayList<CategoryModel> Datalist;
-    Spinner category;
+
+
     AppSharedPreferences sharedPreferences;
-    int PICK_IMAGE_REQUEST = 1;
-    Bitmap bitmap;
-    ProgressDialog progressDialog;
-    String message, encodedImage;
+
+    private final static int FILECHOOSER_RESULTCODE=1;
+
+
     ProgressDialog pDialog;
-    ImageView priew;
+
+    WebView  webView;
+    private static final int INPUT_FILE_REQUEST_CODE = 1;
+    ArrayList<CategoryModel> Datalist;
+    private static final String TAG = SellerDashboard.class.getSimpleName();
+    private WebSettings webSettings;
+    private ValueCallback<Uri> mUploadMessage;
+    private Uri mCapturedImageURI = null;
+    private ValueCallback<Uri[]> mFilePathCallback;
+    private String mCameraPhotoPath;
+    ImageView imageView;
+    Spinner category;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
         category = (Spinner) findViewById(R.id.category);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
             }
         });
         sharedPreferences =  new AppSharedPreferences(this);
@@ -96,28 +138,99 @@ public class SellerDashboard extends AppCompatActivity
         ListView MenuIcon = (ListView)findViewById(R.id.MenuIcon);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        webView = (WebView)findViewById(R.id.webid);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
-        TextView nameTitle = (TextView)findViewById(R.id.nameTitle);
+        webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setAllowFileAccess(true);
+        webView.setWebViewClient(new Client());
+        webView.setWebChromeClient(new ChromeClient());
+        if (Build.VERSION.SDK_INT >= 19) {
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }
+        else if(Build.VERSION.SDK_INT >=11 && Build.VERSION.SDK_INT < 19) {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        String data = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<body>\n" +
+                "  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n" +
+                "  <script type=\"text/javascript\" src=\"http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js\"></script>\n" +
+                "<form action=\"http://ofconline.in/Builders/get_upload_server\" method=\"post\" enctype=\"multipart/form-data\">\n" +
+                "\n" +
+                "\n" +
+                "     <input type=\"hidden\" name=\"add_name\">\n" +
+                "      <input type=\"hidden\" name=\"category\">\n" +
+                "  \n" +
+                "\t\n" +
+                "           <button type=\"button\" class=\"btn btn-success\" style=\"width:100%;\"  onclick=\"$('#upload').trigger('click');\">Upload Advertiesment</button>\n" +
+                "        <input type='file' style=\"display:none;\" name=\"image\"  id=\"upload\" class=\"hide_file\"  />\n" +
+                "    \n" +
+                "  \n" +
+                "\t\n" +
+                "\t<div  class=\"form-group\">\n" +
+                "    \n" +
+                "    </div>\n" +
+                "\t\n" +
+                "\t\n" +
+                "\t\n" +
+                "      <button type=\"submit\"  style=\"width:100%;\" class=\"btn btn-primary\">Publish Advertiesment</button>\n" +
+                "   \n" +
+                "   \n" +
+                "\t\n" +
+                "\t\n" +
+                "\t\n" +
+                "\t\n" +
+                "\n" +
+                "</form>\n" +
+                "\n" +
+                "<style>\n" +
+                "body{\n" +
+                "background:#fff;\n" +
+                "}\n" +
+                "#f{\n" +
+                "  padding:5px 10px;\n" +
+                "  background:#00ad2d;\n" +
+                "  border:1px solid #00ad2d;\n" +
+                "  position:relative;\n" +
+                "  color:#fff;\n" +
+                "  border-radius:2px;\n" +
+                "  text-align:center;\n" +
+                "  float:left;\n" +
+                "  cursor:pointer\n" +
+                "}\n" +
+                ".hide_file {\n" +
+                "    position: absolute;\n" +
+                "    z-index: 1000;\n" +
+                "    opacity: 0;\n" +
+                "    cursor: pointer;\n" +
+                "    right: 0;\n" +
+                "    top: 0;\n" +
+                "    height: 100%;\n" +
+                "    font-size: 24px;\n" +
+                "    width: 100%;\n" +
+                "    \n" +
+                "}\n" +
+                "</style>\n" +
+                "\n" +
+                "</body>\n" +
+                "</html>";
 
 
-        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            //    cat_id = (TextView)view.findViewById(R.id.cat_name);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+        webView.loadDataWithBaseURL("",data,"text/html","UTF-8","");
 
-            }
-        });
+
+
 
         MenuName = new ArrayList<>();
         ImageList = new ArrayList<>();
 
         MenuName.add("Home");
         MenuName.add("Package");
-        MenuName.add("Advertisment");
+        MenuName.add("Advertisement");
         MenuName.add("Setting");
         MenuName.add("Logout");
         ImageList.add(R.drawable.seller_home);
@@ -131,10 +244,17 @@ public class SellerDashboard extends AppCompatActivity
         View header=navigationView.getHeaderView(0);
         TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
         headrmobile.setText(sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
-        priew = (ImageView)findViewById(R.id.priew);
+
         TextView headername = (TextView)header.findViewById(R.id.headername);
         headername.setText(sharedPreferences.pref.getString(sharedPreferences.FirstName,"")+" "+sharedPreferences.pref.getString(sharedPreferences.LastName,""));
+
         Datalist = new ArrayList<>();
+        loadCat();
+    }
+
+    public void loadCat()
+    {
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, API.CATEGORY,
                 new Response.Listener<String>() {
                     @Override
@@ -181,65 +301,235 @@ public class SellerDashboard extends AppCompatActivity
                     }
                 });
         VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-
-       Button uploadimg = (Button)findViewById(R.id.uploadimg);
-        uploadimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent pickImageIntent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickImageIntent.setType("image/*");
-                pickImageIntent.putExtra("aspectX", 1);
-                pickImageIntent.putExtra("aspectY", 1);
-                pickImageIntent.putExtra("scale", true);
-                pickImageIntent.putExtra("outputFormat",
-                        Bitmap.CompressFormat.JPEG.toString());
-                startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST);
-            }
-        });
-
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri filePath = data.getData();
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = "1245421";
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File imageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
 
+
+        return imageFile;
+    }
+    public class ChromeClient extends WebChromeClient {
+        // For Android 5.0
+        public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
+            // Double check that we don't have any existing callbacks
+            if (mFilePathCallback != null) {
+                mFilePathCallback.onReceiveValue(null);
+            }
+            mFilePathCallback = filePath;
+
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                    takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                    Log.e(TAG, "Unable to create Image File", ex);
+                }
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            Uri.fromFile(photoFile));
+                    imageView.setImageURI(Uri.fromFile(photoFile));
+                } else {
+                    takePictureIntent = null;
+                }
+            }
+            Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            contentSelectionIntent.setType("image/*");
+            Intent[] intentArray;
+            if (takePictureIntent != null) {
+                intentArray = new Intent[]{takePictureIntent};
+            } else {
+                intentArray = new Intent[0];
+            }
+            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+            startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
+            return true;
+        }
+        // openFileChooser for Android 3.0+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+            mUploadMessage = uploadMsg;
+            // Create AndroidExampleFolder at sdcard
+            // Create AndroidExampleFolder at sdcard
+            File imageStorageDir = new File(
+                    Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_PICTURES)
+                    , "AndroidExampleFolder");
+            if (!imageStorageDir.exists()) {
+                // Create AndroidExampleFolder at sdcard
+                imageStorageDir.mkdirs();
+            }
+            // Create camera captured image file path and name
+            File file = new File(
+                    imageStorageDir + File.separator + "IMG_"
+                            + String.valueOf(System.currentTimeMillis())
+                            + ".jpg");
+            mCapturedImageURI = Uri.fromFile(file);
+            // Camera capture image intent
+            final Intent captureIntent = new Intent(
+                    android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType("image/*");
+            // Create file chooser intent
+            Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
+            // Set camera intent to file chooser
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS
+                    , new Parcelable[] { captureIntent });
+            // On select image call onActivityResult method of activity
+            startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
+        }
+        // openFileChooser for Android < 3.0
+        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+            openFileChooser(uploadMsg, "");
+        }
+        //openFileChooser for other Android versions
+        public void openFileChooser(ValueCallback<Uri> uploadMsg,
+                                    String acceptType,
+                                    String capture) {
+            openFileChooser(uploadMsg, acceptType);
+        }
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        // Check if the key event was the Back button and if there's history
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+            webView.goBack();
+            return true;
+        }
+        // If it wasn't the Back key or there's no web page history, bubble up to the default
+        // system behavior (probably exit the activity)
+        return super.onKeyDown(keyCode, event);
+    }
+    public class Client extends WebViewClient {
+        ProgressDialog progressDialog;
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // If url contains mailto link then open Mail Intent
+            if (url.contains("mailto:")) {
+                // Could be cleverer and use a regex
+                //Open links in new browser
+                view.getContext().startActivity(
+                        new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                // Here we can open new activity
+                return true;
+            }else {
+                // Stay within this webview and load url
+                view.loadUrl(url);
+                return true;
+            }
+        }
+        //Show loader on url load
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            // Then show progress  Dialog
+            // in standard case YourActivity.this
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(SellerDashboard.this);
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+            }
+        }
+        // Called when all page resources loaded
+        public void onPageFinished(WebView view, String url) {
             try {
-                //getting image from gallery
-
-
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                //Setting image to ImageView
-                priew.setImageBitmap(bitmap);
-                String image = getStringImage(bitmap);
-               SendImage(image);
-                pDialog.hide();
-               // getStringImage(bitmap);
-            } catch (Exception e) {
-                e.printStackTrace();
+                // Close progressDialog
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         }
     }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Uri picUri = data.getData();
 
-    public String getStringImage(Bitmap bmp){
-        try {
+            String filePath = getPath(picUri);
 
 
-            pDialog.setMessage("Loading Data ...");
-            pDialog.show();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG,60, baos);
-            byte[] imageBytes = baos.toByteArray();
-            encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-            return encodedImage;
-        }catch (Exception e){
-
+            imageView.setImageURI(picUri);
         }
-        return encodedImage;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
+                super.onActivityResult(requestCode, resultCode, data);
+                return;
+            }
+            Uri[] results = null;
+            // Check that the response is a good one
+            if (resultCode == Activity.RESULT_OK) {
+                if (data == null) {
+                    // If there is not data, then we may have taken a photo
+                    if (mCameraPhotoPath != null) {
+                        results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                    }
+                } else {
+                    String dataString = data.getDataString();
+                    if (dataString != null) {
+                        results = new Uri[]{Uri.parse(dataString)};
+                    }
+                }
+            }
+            mFilePathCallback.onReceiveValue(results);
+            mFilePathCallback = null;
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            if (requestCode != FILECHOOSER_RESULTCODE || mUploadMessage == null) {
+                super.onActivityResult(requestCode, resultCode, data);
+                return;
+            }
+            if (requestCode == FILECHOOSER_RESULTCODE) {
+                if (null == this.mUploadMessage) {
+                    return;
+                }
+                Uri result = null;
+                try {
+                    if (resultCode != RESULT_OK) {
+                        result = null;
+                    } else {
+                        Toast.makeText(getApplicationContext(), "activity :" ,
+                                Toast.LENGTH_LONG).show();
+                        // retrieve from the private variable if the intent is null
+                        result = data == null ? mCapturedImageURI : data.getData();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "activity :" + e,
+                            Toast.LENGTH_LONG).show();
+                }
+                mUploadMessage.onReceiveValue(result);
+                mUploadMessage = null;
+            }
+        }
+        return;
     }
-
+    private String getPath(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        android.content.CursorLoader loader = new android.content.CursorLoader(getApplicationContext(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -250,43 +540,7 @@ public class SellerDashboard extends AppCompatActivity
         }
     }
 
-    private void SendImage( final String image) {
-        Toast.makeText(this, ""+image, Toast.LENGTH_SHORT).show();
-        Log.d("imgresdata",image);
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, API.Upload_img,
 
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(SellerDashboard.this, ""+response, Toast.LENGTH_SHORT).show();
-                       Log.d("imgres",response);
-
-                }
-    },
-            new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-
-        }
-    }) {
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-
-            Map<String, String> params = new Hashtable<String, String>();
-
-            params.put("image", image);
-            return params;
-        }
-    };
-    {
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
-}
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
