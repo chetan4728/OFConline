@@ -4,11 +4,7 @@ import android.app.ProgressDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -17,11 +13,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.nucleosystechnologies.ofconline.Adapter.AddListAdapter;
-import com.nucleosystechnologies.ofconline.Adapter.HomePagerSlider;
+import com.nucleosystechnologies.ofconline.Adapter.PackageAdapter;
 import com.nucleosystechnologies.ofconline.Model.Addvertise_model;
+import com.nucleosystechnologies.ofconline.Model.Package_model;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
-import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 
 import org.json.JSONArray;
@@ -32,47 +28,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdvertiseListing extends AppCompatActivity {
+public class PackageActivity extends AppCompatActivity {
 
-    ArrayList<Addvertise_model> AddData;
-    ListView addlist;
-    AppSharedPreferences sharedPreferences;
+    ArrayList<Package_model> package_models;
+    ListView pkage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_advertise_listing);
+        setContentView(R.layout.activity_package);
+        package_models =  new ArrayList<>();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle("My Advertiesment List");
-        AddData =  new ArrayList<>();
-        addlist = (ListView)findViewById(R.id.addlist);
-
-        sharedPreferences =  new AppSharedPreferences(this);
-
+        actionBar.setTitle("Select Package");
+        pkage = (ListView)findViewById(R.id.pkage);
         loadadd();
     }
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-
-
-
-
 
     public void loadadd()
     {
-        final ProgressDialog progressDialog = new ProgressDialog(AdvertiseListing.this);
+        final ProgressDialog progressDialog = new ProgressDialog(PackageActivity.this);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
         progressDialog.setCancelable(false);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.GETADDBYID,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.get_package,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -86,20 +69,20 @@ public class AdvertiseListing extends AppCompatActivity {
 
                                 for (int i=0;i<jsonArray.length();i++)
                                 {
-                                    Addvertise_model model =  new Addvertise_model();
-                                    model.setId(jsonArray.getJSONObject(i).getInt("id"));
-                                    model.setAdd_name(jsonArray.getJSONObject(i).getString("name"));
-                                    model.setImg(jsonArray.getJSONObject(i).getString("image"));
-                                    model.setCreated_by(jsonArray.getJSONObject(i).getInt("created_by"));
-                                    model.setCat(jsonArray.getJSONObject(i).getString("category"));
-                                    model.setCreated_date(jsonArray.getJSONObject(i).getString("created_date"));
-                                    model.setStatus(jsonArray.getJSONObject(i).getInt("status"));
-                                    AddData.add(model);
+                                    Package_model model =  new Package_model();
+                                    model.setPkg_id(jsonArray.getJSONObject(i).getInt("pkg_id"));
+                                    model.setPkg_name(jsonArray.getJSONObject(i).getString("pkg_name"));
+                                    model.setPkg_detail(jsonArray.getJSONObject(i).getJSONArray("pkg_detail"));
+                                    model.setPkg_limit(jsonArray.getJSONObject(i).getString("pkg_limit"));
+                                    model.setPkg_price(jsonArray.getJSONObject(i).getString("pkg_price"));
+                                    model.setPkg_validity(jsonArray.getJSONObject(i).getString("pkg_validity"));
+
+                                    package_models.add(model);
                                 }
 
-                                AddListAdapter addListAdapter = new AddListAdapter(getApplicationContext(),AddData);
+                                PackageAdapter packageAdapter = new PackageAdapter(getApplicationContext(),package_models);
 
-                                addlist.setAdapter(addListAdapter);
+                                pkage.setAdapter(packageAdapter);
                                 progressDialog.hide();
 
                             }
@@ -121,18 +104,13 @@ public class AdvertiseListing extends AppCompatActivity {
 
                         //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }){
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<>();
-                params.put("emp_id",sharedPreferences.pref.getString(sharedPreferences.mast_id,""));
-
-                return params;
-            }
-        };
+                });
         VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

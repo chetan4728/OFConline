@@ -15,6 +15,7 @@ import com.nucleosystechnologies.ofconline.Activity.AboutUs;
 import com.nucleosystechnologies.ofconline.Activity.AdvertiseListing;
 import com.nucleosystechnologies.ofconline.Activity.ContactUs;
 import com.nucleosystechnologies.ofconline.Activity.Dashboard;
+import com.nucleosystechnologies.ofconline.Activity.PackageActivity;
 import com.nucleosystechnologies.ofconline.Activity.Services;
 import com.nucleosystechnologies.ofconline.Activity.SubCategory;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
@@ -97,6 +98,15 @@ public class menu_content_adapter extends BaseAdapter{
                     i.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                 }
+                else if(catname.trim().equals("Package"))
+                {
+                    Intent i = new Intent(context, PackageActivity.class);
+                    i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+                }
+
+
+
 
             }
         });

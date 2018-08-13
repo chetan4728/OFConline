@@ -42,6 +42,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -114,13 +115,29 @@ public class SellerDashboard extends AppCompatActivity
         setContentView(R.layout.activity_seller_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        final EditText name = (EditText)findViewById(R.id.name);
 
 
         category = (Spinner) findViewById(R.id.category);
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                TextView callImage = (TextView)view.findViewById(R.id.cat_name);
+
+
+                String cat_id = callImage.getTag().toString();
+                String getname = name.getText().toString();
+
+                if(position>0)
+                {
+                    callImage(getname,cat_id);
+                }
+                else
+                {
+                    Toast.makeText(SellerDashboard.this, "Please Select Category", Toast.LENGTH_SHORT).show();
+
+                }
 
             }
 
@@ -142,6 +159,40 @@ public class SellerDashboard extends AppCompatActivity
         imageView = (ImageView) findViewById(R.id.imageView);
 
         webSettings = webView.getSettings();
+
+
+
+
+
+        MenuName = new ArrayList<>();
+        ImageList = new ArrayList<>();
+
+        MenuName.add("Home");
+        MenuName.add("Package");
+        MenuName.add("Advertisement");
+        MenuName.add("Setting");
+        MenuName.add("Logout");
+        ImageList.add(R.drawable.seller_home);
+        ImageList.add(R.drawable.seller_package);
+        ImageList.add(R.drawable.seller_advertiesment);
+        ImageList.add(R.drawable.seller_setting);
+        ImageList.add(R.drawable.seller_logout);
+          pDialog = new ProgressDialog(this);
+        menu_content_adapter menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);
+        MenuIcon.setAdapter(menu_content_adapter);
+        View header=navigationView.getHeaderView(0);
+        TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
+        headrmobile.setText(sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
+
+        TextView headername = (TextView)header.findViewById(R.id.headername);
+        headername.setText(sharedPreferences.pref.getString(sharedPreferences.FirstName,"")+" "+sharedPreferences.pref.getString(sharedPreferences.LastName,""));
+
+        Datalist = new ArrayList<>();
+        loadCat();
+    }
+
+    public void callImage(String name,String cat)
+    {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setAllowFileAccess(true);
@@ -153,6 +204,9 @@ public class SellerDashboard extends AppCompatActivity
         else if(Build.VERSION.SDK_INT >=11 && Build.VERSION.SDK_INT < 19) {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+        String emp_id = sharedPreferences.pref.getString(sharedPreferences.mast_id,"");
+
+
         String data = "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<body>\n" +
@@ -161,8 +215,9 @@ public class SellerDashboard extends AppCompatActivity
                 "<form action=\"http://ofconline.in/Builders/get_upload_server\" method=\"post\" enctype=\"multipart/form-data\">\n" +
                 "\n" +
                 "\n" +
-                "     <input type=\"hidden\" name=\"add_name\">\n" +
-                "      <input type=\"hidden\" name=\"category\">\n" +
+                "     <input type=\"hidden\" name=\"add_name\" value="+name+" > \n" +
+                "     <input type=\"hidden\" name=\"emp_id\" value="+emp_id+" > \n" +
+                "     <input type=\"hidden\" name=\"cat_id\" value="+cat+" > \n" +
                 "  \n" +
                 "\t\n" +
                 "           <button type=\"button\" class=\"btn btn-success\" style=\"width:100%;\"  onclick=\"$('#upload').trigger('click');\">Upload Advertiesment</button>\n" +
@@ -221,35 +276,6 @@ public class SellerDashboard extends AppCompatActivity
 
 
         webView.loadDataWithBaseURL("",data,"text/html","UTF-8","");
-
-
-
-
-        MenuName = new ArrayList<>();
-        ImageList = new ArrayList<>();
-
-        MenuName.add("Home");
-        MenuName.add("Package");
-        MenuName.add("Advertisement");
-        MenuName.add("Setting");
-        MenuName.add("Logout");
-        ImageList.add(R.drawable.seller_home);
-        ImageList.add(R.drawable.seller_package);
-        ImageList.add(R.drawable.seller_advertiesment);
-        ImageList.add(R.drawable.seller_setting);
-        ImageList.add(R.drawable.seller_logout);
-          pDialog = new ProgressDialog(this);
-        menu_content_adapter menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);
-        MenuIcon.setAdapter(menu_content_adapter);
-        View header=navigationView.getHeaderView(0);
-        TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
-        headrmobile.setText(sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
-
-        TextView headername = (TextView)header.findViewById(R.id.headername);
-        headername.setText(sharedPreferences.pref.getString(sharedPreferences.FirstName,"")+" "+sharedPreferences.pref.getString(sharedPreferences.LastName,""));
-
-        Datalist = new ArrayList<>();
-        loadCat();
     }
 
     public void loadCat()
@@ -454,6 +480,9 @@ public class SellerDashboard extends AppCompatActivity
                 if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
                     progressDialog = null;
+
+
+
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();

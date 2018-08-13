@@ -63,7 +63,8 @@
             android:label="@string/title_activity_seller_dashboard"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".Activity.AdvertiseListing"></activity>
+        <activity android:name=".Activity.AdvertiseListing" />
+        <activity android:name=".Activity.PackageActivity"></activity>
     </application>
 
 </manifest>

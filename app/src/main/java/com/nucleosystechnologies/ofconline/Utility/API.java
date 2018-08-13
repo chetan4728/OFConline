@@ -18,5 +18,8 @@ public class API {
   public static  String ADVERTISE_IMG = Domain+"upload/advertise/";
   public static String  Upload_img = Domain+"Builders/upload_img_server";
   public static String GETADDBYID = Domain+"Builders/advertise_list_api";
+  public static String DELADD = Domain+"Builders/advertise_delete_api";
+
+  public static String get_package = Domain+"Builders/get_package";
 
 }

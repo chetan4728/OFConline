@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                  JSONArray jsonArray = obj.getJSONArray("data");
 
-                                 //Toast.makeText(LoginActivity.this,jsonArray.getJSONObject(0).getString("mast_id"), Toast.LENGTH_SHORT).show();
+                               //  Toast.makeText(LoginActivity.this,jsonArray.getJSONObject(0).getString("mast_id"), Toast.LENGTH_SHORT).show();
 
                                  app.editor.putString(AppSharedPreferences.FirstName,jsonArray.getJSONObject(0).getString("first_name"));
                                  app.editor.putString(AppSharedPreferences.LastName,jsonArray.getJSONObject(0).getString("last_name"));
