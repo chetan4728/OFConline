@@ -32,6 +32,7 @@
                 android:background="#ddd"
                 android:padding="10dp"
                 android:hint="First Name"
+                android:id="@+id/firstname"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
 
@@ -40,6 +41,7 @@
                 android:background="#ddd"
                 android:layout_marginLeft="5dp"
                 android:padding="10dp"
+                android:id="@+id/lasttname"
                 android:hint="Last Name"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -58,6 +60,7 @@
                 android:layout_width="0dp"
                 android:background="#ddd"
                 android:padding="10dp"
+                android:id="@+id/mobile"
                 android:hint="Pri Contact"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -68,6 +71,7 @@
                 android:layout_marginLeft="5dp"
                 android:padding="10dp"
                 android:hint="Sec Contact"
+                android:id="@+id/mobile2"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
 
@@ -85,6 +89,7 @@
                 android:layout_width="0dp"
                 android:background="#ddd"
                 android:padding="10dp"
+                android:id="@+id/country"
                 android:hint="Country"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -94,6 +99,7 @@
                 android:background="#ddd"
                 android:layout_marginLeft="5dp"
                 android:padding="10dp"
+                android:id="@+id/state"
                 android:hint="State"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -112,6 +118,7 @@
                 android:layout_width="0dp"
                 android:background="#ddd"
                 android:padding="10dp"
+                android:id="@+id/city"
                 android:hint="City"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -121,6 +128,7 @@
                 android:background="#ddd"
                 android:layout_marginLeft="5dp"
                 android:padding="10dp"
+                android:id="@+id/zipcode"
                 android:hint="Zipcode"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -138,6 +146,7 @@
                 android:layout_width="0dp"
                 android:background="#ddd"
                 android:padding="10dp"
+                android:id="@+id/address"
                 android:hint="Address"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -148,6 +157,7 @@
                 android:layout_marginLeft="5dp"
                 android:padding="10dp"
                 android:hint="Email"
+                android:id="@+id/email"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
 
@@ -165,6 +175,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:background="#ddd"
+                android:id="@+id/email2"
                 android:padding="10dp"
                 android:hint="Alt Email"
                 android:layout_weight="1"
@@ -175,6 +186,7 @@
                 android:background="#ddd"
                 android:layout_marginLeft="5dp"
                 android:padding="10dp"
+                android:id="@+id/password"
                 android:hint="Password"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -188,6 +200,7 @@
              android:layout_gravity="center_horizontal"
              android:layout_marginLeft="40dp"
              android:layout_marginTop="20dp"
+             android:id="@+id/udpatebtn"
              android:background="@drawable/update_btn"
              android:layout_marginRight="40dp"
              android:paddingBottom="20dp"

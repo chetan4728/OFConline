@@ -89,7 +89,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
         View header=navigationView.getHeaderView(0);
         TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
-        headrmobile.setText(sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
+        headrmobile.setText("+91 "+sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
 
 
 
@@ -102,12 +102,26 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         ImageList = new ArrayList<>();
 
         MenuName.add("Home");
-        MenuName.add("About Us");
         MenuName.add("Services");
         MenuName.add("Contact Us");
+        MenuName.add("Seller Section");
+        MenuName.add("Feedback");
+        MenuName.add("Share App");
+        MenuName.add("Rate Us");
+        MenuName.add("Customer Support");
+        MenuName.add("Help & Support");
+        MenuName.add("About OFConline");
+        MenuName.add("Terms of Use");
         ImageList.add(R.drawable.home);
         ImageList.add(R.drawable.about);
-        ImageList.add(R.drawable.service);
+        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.contact);
         ImageList.add(R.drawable.contact);
 
         menu_content_adapter  menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);
@@ -181,9 +195,17 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 }
                 else
                 {
-                    Intent intent = new Intent(Dashboard.this, SellerDashboard.class);
+                    if(sharedPreferences.pref.getString(sharedPreferences.isSignup,"").isEmpty()) {
+                        Intent intent = new Intent(Dashboard.this, UserProfile.class);
 
-                    startActivity(intent);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Intent intent = new Intent(Dashboard.this, SellerDashboard.class);
+
+                        startActivity(intent);
+                    }
                 }
             }
         });
