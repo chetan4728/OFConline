@@ -137,11 +137,12 @@ public class LoginActivity extends AppCompatActivity {
                                  Bundle bundle = new Bundle();
 
 
-
+                                 finish();
                                  bundle.putString("Array",jsonArray.toString());
                                  Intent i =  new Intent(LoginActivity.this,SellerDashboard.class);
                                i.putExtras(bundle);
                                  startActivity(i);
+
                              }
                              else if (obj.getString("status").equals("400"))
                              {

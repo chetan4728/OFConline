@@ -192,6 +192,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                     Intent intent = new Intent(Dashboard.this, LoginActivity.class);
                     ;
                     startActivity(intent);
+
                 }
                 else
                 {
@@ -199,12 +200,14 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                         Intent intent = new Intent(Dashboard.this, UserProfile.class);
 
                         startActivity(intent);
+
                     }
                     else
                     {
                         Intent intent = new Intent(Dashboard.this, SellerDashboard.class);
 
                         startActivity(intent);
+                        finish();
                     }
                 }
             }

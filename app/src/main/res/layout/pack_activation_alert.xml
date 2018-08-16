@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="400dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:text="You Need to purchase package"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        android:textSize="18sp"
+        android:textColor="#00A594"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:textStyle="normal"
+        android:textAlignment="center"
+        android:text="For post your add please purchase package listed on package button"
+        android:textSize="18sp"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="#00A594"
+            android:textColor="#fff"
+            android:id="@+id/editbtn"
+            android:text="CANCEL"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="#00A594"
+            android:textColor="#fff"
+            android:id="@+id/confirm"
+            android:text="PACKAGES"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

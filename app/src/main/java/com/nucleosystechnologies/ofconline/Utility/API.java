@@ -21,5 +21,9 @@ public class API {
   public static String DELADD = Domain+"Builders/advertise_delete_api";
 
   public static String get_package = Domain+"Builders/get_package";
-
+  public static String getCountry = Domain+"Builders/country_list_api";
+  public static String statelist = Domain+"Builders/state_list_api";
+  public static String city = Domain+"Builders/city_list_api";
+  public static String getuser = Domain+"Builders/getProfile";
+  public static String Updateuser = Domain+"Builders/updateprofile";
 }

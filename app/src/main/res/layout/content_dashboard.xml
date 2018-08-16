@@ -62,7 +62,7 @@
 
     <ImageView
         android:layout_width="50dp"
-        android:background="@drawable/lefthand"
+        android:background="@drawable/righthand"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="50dp"
         android:elevation="10dp"

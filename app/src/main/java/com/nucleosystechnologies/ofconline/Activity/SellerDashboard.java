@@ -25,6 +25,7 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -195,6 +196,7 @@ public class SellerDashboard extends AppCompatActivity
 
         Datalist = new ArrayList<>();
         loadCat();
+        getuserdata();
     }
 
     public void callImage(String name,String cat)
@@ -495,6 +497,71 @@ public class SellerDashboard extends AppCompatActivity
             }
         }
     }
+
+
+    public void getuserdata()
+    {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.getuser,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject obj = new JSONObject(response);
+
+                            if(obj.getString("status").equals("200"))
+                            {
+                                JSONArray jsonArray = obj.getJSONArray("data");
+
+                                for (int i=0;i<jsonArray.length();i++)
+                                {
+
+                                    String ispack  = jsonArray.getJSONObject(i).getString("package_selected");
+
+                                    if (ispack=="null")
+                                    {
+                                        OtpAlert();
+                                    }
+
+
+
+                                }
+
+
+
+                            }
+                            else if (obj.getString("status").equals("400"))
+                            {
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+                params.put("mast_id",sharedPreferences.pref.getString(AppSharedPreferences.mast_id,""));
+
+                return params;
+            }
+        };
+        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             Uri picUri = data.getData();
@@ -555,6 +622,52 @@ public class SellerDashboard extends AppCompatActivity
         }
         return;
     }
+
+
+    public void OtpAlert()
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.pack_activation_alert, null);
+        builder.setCancelable(false);
+        builder.setView(promptsView);
+        final AlertDialog dialog = builder.create();
+        Button editbtn = (Button)promptsView.findViewById(R.id.editbtn);
+        Button confirm = (Button)promptsView.findViewById(R.id.confirm);
+
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =  new Intent(SellerDashboard.this,PackageActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+
+            }
+        });
+        editbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i =  new Intent(SellerDashboard.this,Dashboard.class);
+                startActivity(i);
+                finish();
+            }
+        });
+// Set up the buttons
+
+        dialog.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getuserdata();
+    }
+
     private String getPath(Uri contentUri) {
         String[] proj = { MediaStore.Images.Media.DATA };
         android.content.CursorLoader loader = new android.content.CursorLoader(getApplicationContext(), contentUri, proj, null, null, null);
