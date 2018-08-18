@@ -26,4 +26,5 @@ public class API {
   public static String city = Domain+"Builders/city_list_api";
   public static String getuser = Domain+"Builders/getProfile";
   public static String Updateuser = Domain+"Builders/updateprofile";
+  public static String UpdateAdd = Domain+"Builders/updateAddStatus";
 }

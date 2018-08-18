@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -47,6 +48,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,7 +62,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     private ViewPager Viewpager;
 
     AppSharedPreferences sharedPreferences;
-
+    int currentPage = 0;
+    Timer timer;
+    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
+    final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
     String Full_name;
     private android.app.ActionBar actionBar;
     private String[] tabs = { "Top Rated", "Games", "Movies" };
@@ -115,7 +121,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         ImageList.add(R.drawable.home);
         ImageList.add(R.drawable.about);
         ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.contact);
+        ImageList.add(R.drawable.seller);
         ImageList.add(R.drawable.contact);
         ImageList.add(R.drawable.contact);
         ImageList.add(R.drawable.contact);
@@ -267,12 +273,12 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                       // Toast.makeText(getApplicationContext(), ""+response, Toast.LENGTH_SHORT).show();
                         try {
                             JSONObject obj = new JSONObject(response);
                             if(obj.getString("status").equals("200"))
                             {
-                                //Toast.makeText(getActivity(), ""+response, Toast.LENGTH_SHORT).show();
+
                                 JSONArray jsonArray = obj.getJSONArray("data");
 
                                 for (int i=0;i<jsonArray.length();i++)
@@ -295,6 +301,25 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                                 Viewpager.setClipToPadding(false);
                                 Viewpager.setPageMargin(mar);
                                 Viewpager.setCurrentItem(AddData.size());
+
+                                final Handler handler = new Handler();
+                                final Runnable Update = new Runnable() {
+                                    public void run() {
+                                        if (currentPage == AddData.size()) {
+                                            currentPage = 0;
+                                        }
+                                        Viewpager.setCurrentItem(currentPage++, true);
+                                    }
+                                };
+
+                                timer = new Timer(); // This will create a new Thread
+                                timer .schedule(new TimerTask() { // task to be scheduled
+
+                                    @Override
+                                    public void run() {
+                                        handler.post(Update);
+                                    }
+                                }, DELAY_MS, PERIOD_MS);
 
                             }
                             else if (obj.getString("status").equals("400"))

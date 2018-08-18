@@ -85,6 +85,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Timer;
 
 public class SellerDashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -96,7 +97,10 @@ public class SellerDashboard extends AppCompatActivity
 
     private final static int FILECHOOSER_RESULTCODE=1;
 
-
+    int currentPage = 0;
+    Timer timer;
+    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
+    final long PERIOD_MS = 3000;
     ProgressDialog pDialog;
 
     WebView  webView;
@@ -110,13 +114,14 @@ public class SellerDashboard extends AppCompatActivity
     private String mCameraPhotoPath;
     ImageView imageView;
     Spinner category;
+    EditText catname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final EditText name = (EditText)findViewById(R.id.name);
+        catname = (EditText)findViewById(R.id.name);
 
 
         category = (Spinner) findViewById(R.id.category);
@@ -124,11 +129,13 @@ public class SellerDashboard extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                TextView callImage = (TextView)view.findViewById(R.id.cat_name);
+                TextView callImage = (TextView)findViewById(R.id.cat_name);
 
 
                 String cat_id = callImage.getTag().toString();
-                String getname = name.getText().toString();
+                String getname = String.valueOf(catname.getText());
+
+                Toast.makeText(SellerDashboard.this, ""+getname, Toast.LENGTH_SHORT).show();
 
                 if(position>0)
                 {
@@ -520,7 +527,7 @@ public class SellerDashboard extends AppCompatActivity
 
                                     if (ispack=="null")
                                     {
-                                        OtpAlert();
+                                        //OtpAlert();
                                     }
 
 

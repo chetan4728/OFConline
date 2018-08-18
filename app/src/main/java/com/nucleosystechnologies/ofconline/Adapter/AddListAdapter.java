@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -70,7 +71,7 @@ public class AddListAdapter extends BaseAdapter {
         TextView add_name = (TextView)view.findViewById(R.id.add_name);
         TextView cat_name = (TextView)view.findViewById(R.id.cat_name);
         TextView date = (TextView)view.findViewById(R.id.date);
-        Switch status = (Switch)view.findViewById(R.id.status);
+        final Switch status = (Switch)view.findViewById(R.id.status);
         add_name.setText(cat.getAdd_name());
         cat_name.setText(cat.getCat());
         date.setText(cat.getCreated_date());
@@ -80,6 +81,23 @@ public class AddListAdapter extends BaseAdapter {
         {
             status.setChecked(true);
         }
+        status.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                if(status.isChecked()==true)
+                {
+                    updateStatus(cat.getId(),1);
+                    Toast.makeText(context, "Active", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    updateStatus(cat.getId(),0);
+                    Toast.makeText(context, "Inactive", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
         LinearLayout delme = (LinearLayout)view.findViewById(R.id.delme);
         delme.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +141,38 @@ public class AddListAdapter extends BaseAdapter {
                 Map<String, String> params = new HashMap<>();
                 params.put("adv_id", String.valueOf(i).toString());
 
+                return params;
+            }
+        };
+        VolllyRequest.getInstance(context).addToRequestQueue(stringRequest);
+
+    }
+
+    public void updateStatus(final int i,final  int status)
+    {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.UpdateAdd,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        // Toast.makeText(context, response, Toast.LENGTH_LONG).show();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+                params.put("adv_id", String.valueOf(i).toString());
+                params.put("status", String.valueOf(status).toString());
                 return params;
             }
         };

@@ -89,7 +89,8 @@ public class CategoryAdapter extends BaseAdapter {
         });
 
       //Log.i("IMAGE",API.IMG_PATH+cat.getImg());
-        Picasso.with(context).load(IMG_PATH+cat.getImg()).placeholder(R.drawable.place).resize(150, 150)
+        Picasso.with(context).load(IMG_PATH+cat.getImg()).placeholder(R.drawable.place).resize(400, 400)
+                .onlyScaleDown()
                 .centerInside().into(cat_img);
 
         return convertview;
