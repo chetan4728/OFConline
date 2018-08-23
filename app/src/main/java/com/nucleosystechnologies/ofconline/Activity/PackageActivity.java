@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import com.nucleosystechnologies.ofconline.Utility.API;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
+import com.stripe.android.exception.AuthenticationException;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 import com.stripe.android.view.CardInputWidget;
@@ -45,6 +47,11 @@ public class PackageActivity extends AppCompatActivity {
     ListView pkage;
     Button plan1,plan2;
     Card card;
+    Stripe stripe;
+    Integer amount;
+    String name;
+    Token tok;
+
     CardInputWidget mCardInputWidget;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +78,10 @@ public class PackageActivity extends AppCompatActivity {
                 OtpAlert();
             }
         });
-         mCardInputWidget = (CardInputWidget) findViewById(R.id.card_input_widget);
+
+        amount = 500;
+        name = "500";
+        stripe = new Stripe(getApplicationContext(),"pk_test_AARyUyZkzPCCc060fxvm2Ond");
 
         //pkage = (ListView)findViewById(R.id.pkage);
      //   loadadd();
@@ -159,24 +169,32 @@ public class PackageActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Card card = new Card("4242424242424242", 12, 2019, "123");
+                card = new Card("4242424242424242", 12, 2019, "123");
 
-                if (card == null) {
-                    Stripe stripe = new Stripe(getApplicationContext(), "pk_test_TYooMQauvdEDq54NiTphI7jx");
-                    stripe.createToken(
-                            card,
-                            new TokenCallback() {
-                                public void onSuccess(Token token) {
-                                    // Send token to your server
-                                    Toast.makeText(PackageActivity.this, ""+token, Toast.LENGTH_SHORT).show();
-                                }
-                                public void onError(Exception error) {
-                                    // Show localized error message
-                                    Toast.makeText(PackageActivity.this, "", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-                }
+                card.setCurrency("usd");
+                card.setName("Theodhor Pandeli");
+                card.setAddressZip("1000");
+        /*
+        card.setNumber(4242424242424242);
+        card.setExpMonth(12);
+        card.setExpYear(19);
+        card.setCVC("123");
+        */
+
+
+                stripe.createToken(card, "pk_test_AARyUyZkzPCCc060fxvm2Ond", new TokenCallback() {
+                    public void onSuccess(Token token) {
+                        // TODO: Send Token information to your backend to initiate a charge
+                        Toast.makeText(getApplicationContext(), "Token created: " + token.getId(), Toast.LENGTH_LONG).show();
+                        tok = token;
+                        verify(token.getId());
+
+                    }
+
+                    public void onError(Exception error) {
+                        Log.d("Stripe", error.getLocalizedMessage());
+                    }
+                });
 
             }
         });
@@ -190,6 +208,46 @@ public class PackageActivity extends AppCompatActivity {
 // Set up the buttons
 
         dialog.show();
+    }
+
+
+    public void verify(final String token)
+    {
+
+
+
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,"http://ofconline.in/subscription",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                         Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+                params.put("stripeToken",token);
+                params.put("price", String.valueOf("50"));
+
+                params.put("pack_val", String.valueOf("50"));
+                params.put("pack_person", String.valueOf("1"));
+                return params;
+            }
+        };
+        VolllyRequest.getInstance(this).addToRequestQueue(stringRequest);
+
     }
     @Override
     public boolean onSupportNavigateUp() {

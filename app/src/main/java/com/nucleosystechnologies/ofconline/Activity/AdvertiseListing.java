@@ -44,6 +44,8 @@ public class AdvertiseListing extends AppCompatActivity {
     ArrayList<CategoryModel> Datalist;
     AppSharedPreferences sharedPreferences;
     Spinner category;
+
+    private Button checkout_button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
