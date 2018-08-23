@@ -20,6 +20,7 @@ import com.nucleosystechnologies.ofconline.Activity.Services;
 import com.nucleosystechnologies.ofconline.Activity.SubCategory;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.R;
+import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
 
 import java.util.ArrayList;
 
@@ -29,11 +30,13 @@ public class menu_content_adapter extends BaseAdapter{
     Context context;
     ArrayList<String> MenuName;
     ArrayList<Integer> ImageList;
+    AppSharedPreferences app;
 
     public menu_content_adapter(Context context, ArrayList<String> menuName, ArrayList<Integer> imageList) {
         this.context = context;
         this.MenuName = menuName;
         this.ImageList = imageList;
+        app =  new AppSharedPreferences(context);
     }
 
     @Override
@@ -94,9 +97,16 @@ public class menu_content_adapter extends BaseAdapter{
                 }
                 else if(catname.trim().equals("Advertisement"))
                 {
-                    Intent i = new Intent(context, AdvertiseListing.class);
-                    i.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
+                    String status = app.pref.getString(app.PAYMENT_STATUS,"");
+                    if(status=="null")
+                    {
+                        Toast.makeText(context, "Please Purchase Aid Package", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Intent i = new Intent(context, AdvertiseListing.class);
+                        i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
+                    }
                 }
                 else if(catname.trim().equals("Package"))
                 {

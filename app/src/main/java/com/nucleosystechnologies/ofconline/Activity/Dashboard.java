@@ -111,24 +111,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         MenuName.add("Services");
         MenuName.add("Contact Us");
         MenuName.add("Seller Section");
-        MenuName.add("Feedback");
-        MenuName.add("Share App");
-        MenuName.add("Rate Us");
-        MenuName.add("Customer Support");
-        MenuName.add("Help & Support");
-        MenuName.add("About OFConline");
-        MenuName.add("Terms of Use");
         ImageList.add(R.drawable.home);
         ImageList.add(R.drawable.about);
         ImageList.add(R.drawable.contact);
         ImageList.add(R.drawable.seller);
-        ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.contact);
+
 
         menu_content_adapter  menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);
         MenuIcon.setAdapter(menu_content_adapter);

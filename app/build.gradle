@@ -31,4 +31,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.hbb20:ccp:2.1.2'
+    implementation 'com.stripe:stripe-android:6.1.2'
+
 }

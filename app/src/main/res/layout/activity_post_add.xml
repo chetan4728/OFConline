@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activity.SellerDashboard"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Add Your Advertisement"
+        android:textAlignment="center"
+        android:padding="10dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:background="#fff"
+        android:elevation="10dp"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:background="@drawable/place"
+        android:scaleType="fitXY"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:background="#ddd"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:id="@+id/name"
+        android:padding="5dp"
+        android:hint="Advertiesment Name"
+        android:layout_height="wrap_content" />
+
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:id="@+id/category"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/border"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="40dp"></Spinner>
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:id="@+id/webid"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_height="wrap_content">
+
+    </WebView>
+
+</LinearLayout>

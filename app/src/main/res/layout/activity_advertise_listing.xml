@@ -4,8 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activity.AdvertiseListing">
 
+    <Button
+        android:layout_width="match_parent"
+        android:text="Add New Advertiesment"
+        android:textSize="20sp"
+        android:textColor="#fff"
+        android:id="@+id/postadd"
+        android:layout_margin="20dp"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content" />
 
     <ListView
         android:layout_width="match_parent"

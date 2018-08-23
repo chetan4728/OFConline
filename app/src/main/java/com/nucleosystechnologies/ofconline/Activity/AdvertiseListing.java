@@ -1,14 +1,17 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -17,8 +20,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.nucleosystechnologies.ofconline.Adapter.AddListAdapter;
+import com.nucleosystechnologies.ofconline.Adapter.CategoryListAdapter;
 import com.nucleosystechnologies.ofconline.Adapter.HomePagerSlider;
 import com.nucleosystechnologies.ofconline.Model.Addvertise_model;
+import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
 import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
@@ -36,7 +41,9 @@ public class AdvertiseListing extends AppCompatActivity {
 
     ArrayList<Addvertise_model> AddData;
     ListView addlist;
+    ArrayList<CategoryModel> Datalist;
     AppSharedPreferences sharedPreferences;
+    Spinner category;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +56,24 @@ public class AdvertiseListing extends AppCompatActivity {
         actionBar.setTitle("My Advertiesment List");
         AddData =  new ArrayList<>();
         addlist = (ListView)findViewById(R.id.addlist);
+        Datalist =  new ArrayList<>();
 
         sharedPreferences =  new AppSharedPreferences(this);
 
+        Button postadd = (Button)findViewById(R.id.postadd);
+        postadd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =  new Intent(AdvertiseListing.this,PostAdd.class);
+                startActivity(i);
+            }
+        });
+
         loadadd();
+
     }
+
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

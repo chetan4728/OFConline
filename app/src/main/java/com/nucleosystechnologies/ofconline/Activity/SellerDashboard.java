@@ -91,76 +91,17 @@ public class SellerDashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<String> MenuName;
     ArrayList<Integer> ImageList;
-
-
-    AppSharedPreferences sharedPreferences;
-
-    private final static int FILECHOOSER_RESULTCODE=1;
-
-    int currentPage = 0;
-    Timer timer;
-    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
-    final long PERIOD_MS = 3000;
     ProgressDialog pDialog;
-
-    WebView  webView;
-    private static final int INPUT_FILE_REQUEST_CODE = 1;
     ArrayList<CategoryModel> Datalist;
-    private static final String TAG = SellerDashboard.class.getSimpleName();
-    private WebSettings webSettings;
-    private ValueCallback<Uri> mUploadMessage;
-    private Uri mCapturedImageURI = null;
-    private ValueCallback<Uri[]> mFilePathCallback;
-    private String mCameraPhotoPath;
-    ImageView imageView;
-    Spinner category;
-    EditText catname;
+    AppSharedPreferences sharedPreferences;
+    String paymentStatus;
+    TextView  firstname,lasttname,mobile,mobile2,zipcode,address,email,email2,password,country,state,city;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        catname = (EditText)findViewById(R.id.name);
-
-
-        category = (Spinner) findViewById(R.id.category);
-        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                TextView callImage = (TextView)findViewById(R.id.cat_name);
-
-
-                String cat_id = callImage.getTag().toString();
-                String getname = String.valueOf(catname.getText());
-
-                Toast.makeText(SellerDashboard.this, ""+getname, Toast.LENGTH_SHORT).show();
-
-                if(position>0)
-                {
-                    callImage(getname,cat_id);
-                }
-                else
-                {
-                    Toast.makeText(SellerDashboard.this, "Please Select Category", Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });
-        sharedPreferences =  new AppSharedPreferences(this);
-        if(sharedPreferences.pref.getString("isSignup","").isEmpty())
-        {
-            Intent intent = new Intent(SellerDashboard.this, UserProfile.class);
-            startActivity(intent);
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -169,13 +110,33 @@ public class SellerDashboard extends AppCompatActivity
         ListView MenuIcon = (ListView)findViewById(R.id.MenuIcon);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        webView = (WebView)findViewById(R.id.webid);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        sharedPreferences =  new AppSharedPreferences(this);
+        if(sharedPreferences.pref.getString("isSignup","").isEmpty())
+        {
+            Intent intent = new Intent(SellerDashboard.this, UserProfile.class);
+            startActivity(intent);
+        }
+        Button edit = (Button)findViewById(R.id.edit);
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =  new Intent(SellerDashboard.this,UserProfile.class);
+                startActivity(i);
+            }
+        });
 
-        webSettings = webView.getSettings();
-
-
-
+        firstname = (TextView)findViewById(R.id.firstname);
+        lasttname = (TextView)findViewById(R.id.lasttname);
+        mobile = (TextView)findViewById(R.id.mobile);
+        mobile2 = (TextView)findViewById(R.id.mobile2);
+        country = (TextView) findViewById(R.id.country);
+        state = (TextView)findViewById(R.id.state);
+        city = (TextView)findViewById(R.id.city);
+        zipcode = (TextView)findViewById(R.id.zipcode);
+        address = (TextView)findViewById(R.id.address);
+        email = (TextView)findViewById(R.id.email);
+        email2 = (TextView)findViewById(R.id.email2);
+        password = (TextView)findViewById(R.id.password);
 
 
         MenuName = new ArrayList<>();
@@ -191,7 +152,7 @@ public class SellerDashboard extends AppCompatActivity
         ImageList.add(R.drawable.seller_advertiesment);
         ImageList.add(R.drawable.seller_setting);
         ImageList.add(R.drawable.seller_logout);
-          pDialog = new ProgressDialog(this);
+        pDialog = new ProgressDialog(this);
         menu_content_adapter menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);
         MenuIcon.setAdapter(menu_content_adapter);
         View header=navigationView.getHeaderView(0);
@@ -202,306 +163,17 @@ public class SellerDashboard extends AppCompatActivity
         headername.setText(sharedPreferences.pref.getString(sharedPreferences.FirstName,"")+" "+sharedPreferences.pref.getString(sharedPreferences.LastName,""));
 
         Datalist = new ArrayList<>();
-        loadCat();
         getuserdata();
     }
 
-    public void callImage(String name,String cat)
-    {
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setAllowFileAccess(true);
-        webView.setWebViewClient(new Client());
-        webView.setWebChromeClient(new ChromeClient());
-        if (Build.VERSION.SDK_INT >= 19) {
-            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        }
-        else if(Build.VERSION.SDK_INT >=11 && Build.VERSION.SDK_INT < 19) {
-            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-        String emp_id = sharedPreferences.pref.getString(sharedPreferences.mast_id,"");
 
-
-        String data = "<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "<body>\n" +
-                "  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n" +
-                "  <script type=\"text/javascript\" src=\"http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js\"></script>\n" +
-                "<form action=\"http://ofconline.in/Builders/get_upload_server\" method=\"post\" enctype=\"multipart/form-data\">\n" +
-                "\n" +
-                "\n" +
-                "     <input type=\"hidden\" name=\"add_name\" value="+name+" > \n" +
-                "     <input type=\"hidden\" name=\"emp_id\" value="+emp_id+" > \n" +
-                "     <input type=\"hidden\" name=\"cat_id\" value="+cat+" > \n" +
-                "  \n" +
-                "\t\n" +
-                "           <button type=\"button\" class=\"btn btn-success\" style=\"width:100%;\"  onclick=\"$('#upload').trigger('click');\">Upload Advertiesment</button>\n" +
-                "        <input type='file' style=\"display:none;\" name=\"image\"  id=\"upload\" class=\"hide_file\"  />\n" +
-                "    \n" +
-                "  \n" +
-                "\t\n" +
-                "\t<div  class=\"form-group\">\n" +
-                "    \n" +
-                "    </div>\n" +
-                "\t\n" +
-                "\t\n" +
-                "\t\n" +
-                "      <button type=\"submit\"  style=\"width:100%;\" class=\"btn btn-primary\">Publish Advertiesment</button>\n" +
-                "   \n" +
-                "   \n" +
-                "\t\n" +
-                "\t\n" +
-                "\t\n" +
-                "\t\n" +
-                "\n" +
-                "</form>\n" +
-                "\n" +
-                "<style>\n" +
-                "body{\n" +
-                "background:#fff;\n" +
-                "}\n" +
-                "#f{\n" +
-                "  padding:5px 10px;\n" +
-                "  background:#00ad2d;\n" +
-                "  border:1px solid #00ad2d;\n" +
-                "  position:relative;\n" +
-                "  color:#fff;\n" +
-                "  border-radius:2px;\n" +
-                "  text-align:center;\n" +
-                "  float:left;\n" +
-                "  cursor:pointer\n" +
-                "}\n" +
-                ".hide_file {\n" +
-                "    position: absolute;\n" +
-                "    z-index: 1000;\n" +
-                "    opacity: 0;\n" +
-                "    cursor: pointer;\n" +
-                "    right: 0;\n" +
-                "    top: 0;\n" +
-                "    height: 100%;\n" +
-                "    font-size: 24px;\n" +
-                "    width: 100%;\n" +
-                "    \n" +
-                "}\n" +
-                "</style>\n" +
-                "\n" +
-                "</body>\n" +
-                "</html>";
-
-
-
-        webView.loadDataWithBaseURL("",data,"text/html","UTF-8","");
-    }
-
-    public void loadCat()
-    {
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, API.CATEGORY,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-                            JSONObject obj = new JSONObject(response);
-                            if(obj.getString("status").equals("200"))
-                            {
-                                JSONArray jsonArray = obj.getJSONArray("data");
-
-                                for (int i=0;i<jsonArray.length();i++)
-                                {
-                                    CategoryModel model =  new CategoryModel();
-                                    model.setCategory_id(jsonArray.getJSONObject(i).getInt("category_id"));
-                                    model.setName(jsonArray.getJSONObject(i).getString("name"));
-                                    model.setDescription(jsonArray.getJSONObject(i).getString("description"));
-                                    model.setImg(jsonArray.getJSONObject(i).getString("img"));
-                                    Datalist.add(model);
-                                }
-                                CategoryListAdapter categoryListAdapter =  new CategoryListAdapter(getApplicationContext(),R.layout.category_spinner_item,Datalist);
-                                category.setAdapter(categoryListAdapter);
-                                // categoryList.setAdapter(categoryAdapter);
-
-
-                            }
-                            else if (obj.getString("status").equals("400"))
-                            {
-
-                            }
-
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = "1245421";
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File imageFile = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-
-        return imageFile;
-    }
-    public class ChromeClient extends WebChromeClient {
-        // For Android 5.0
-        public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
-            // Double check that we don't have any existing callbacks
-            if (mFilePathCallback != null) {
-                mFilePathCallback.onReceiveValue(null);
-            }
-            mFilePathCallback = filePath;
-
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                // Create the File where the photo should go
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                    takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
-                } catch (IOException ex) {
-                    // Error occurred while creating the File
-                    Log.e(TAG, "Unable to create Image File", ex);
-                }
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            Uri.fromFile(photoFile));
-                    imageView.setImageURI(Uri.fromFile(photoFile));
-                } else {
-                    takePictureIntent = null;
-                }
-            }
-            Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            contentSelectionIntent.setType("image/*");
-            Intent[] intentArray;
-            if (takePictureIntent != null) {
-                intentArray = new Intent[]{takePictureIntent};
-            } else {
-                intentArray = new Intent[0];
-            }
-            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-            startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
-            return true;
-        }
-        // openFileChooser for Android 3.0+
-        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
-            mUploadMessage = uploadMsg;
-            // Create AndroidExampleFolder at sdcard
-            // Create AndroidExampleFolder at sdcard
-            File imageStorageDir = new File(
-                    Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_PICTURES)
-                    , "AndroidExampleFolder");
-            if (!imageStorageDir.exists()) {
-                // Create AndroidExampleFolder at sdcard
-                imageStorageDir.mkdirs();
-            }
-            // Create camera captured image file path and name
-            File file = new File(
-                    imageStorageDir + File.separator + "IMG_"
-                            + String.valueOf(System.currentTimeMillis())
-                            + ".jpg");
-            mCapturedImageURI = Uri.fromFile(file);
-            // Camera capture image intent
-            final Intent captureIntent = new Intent(
-                    android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
-            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-            i.addCategory(Intent.CATEGORY_OPENABLE);
-            i.setType("image/*");
-            // Create file chooser intent
-            Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
-            // Set camera intent to file chooser
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS
-                    , new Parcelable[] { captureIntent });
-            // On select image call onActivityResult method of activity
-            startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
-        }
-        // openFileChooser for Android < 3.0
-        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-            openFileChooser(uploadMsg, "");
-        }
-        //openFileChooser for other Android versions
-        public void openFileChooser(ValueCallback<Uri> uploadMsg,
-                                    String acceptType,
-                                    String capture) {
-            openFileChooser(uploadMsg, acceptType);
-        }
-    }
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
-            webView.goBack();
-            return true;
-        }
-        // If it wasn't the Back key or there's no web page history, bubble up to the default
-        // system behavior (probably exit the activity)
-        return super.onKeyDown(keyCode, event);
-    }
-    public class Client extends WebViewClient {
-        ProgressDialog progressDialog;
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            // If url contains mailto link then open Mail Intent
-            if (url.contains("mailto:")) {
-                // Could be cleverer and use a regex
-                //Open links in new browser
-                view.getContext().startActivity(
-                        new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                // Here we can open new activity
-                return true;
-            }else {
-                // Stay within this webview and load url
-                view.loadUrl(url);
-                return true;
-            }
-        }
-        //Show loader on url load
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            // Then show progress  Dialog
-            // in standard case YourActivity.this
-            if (progressDialog == null) {
-                progressDialog = new ProgressDialog(SellerDashboard.this);
-                progressDialog.setMessage("Loading...");
-                progressDialog.show();
-            }
-        }
-        // Called when all page resources loaded
-        public void onPageFinished(WebView view, String url) {
-            try {
-                // Close progressDialog
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                    progressDialog = null;
-
-
-
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -523,9 +195,20 @@ public class SellerDashboard extends AppCompatActivity
                                 for (int i=0;i<jsonArray.length();i++)
                                 {
 
-                                    String ispack  = jsonArray.getJSONObject(i).getString("package_selected");
+                                    paymentStatus  = jsonArray.getJSONObject(i).getString("package_selected");
 
-                                    if (ispack=="null")
+                                    sharedPreferences.editor.putString(AppSharedPreferences.PAYMENT_STATUS,paymentStatus);
+                                    sharedPreferences.editor.commit();
+                                    password.setText(jsonArray.getJSONObject(i).getString("user_pass"));
+                                    firstname.setText(jsonArray.getJSONObject(i).getString("first_name"));
+                                    lasttname.setText(jsonArray.getJSONObject(i).getString("last_name"));
+                                    mobile.setText(jsonArray.getJSONObject(i).getString("mobile"));
+                                    mobile2.setText(jsonArray.getJSONObject(i).getString("alt_contact"));
+                                    email.setText(jsonArray.getJSONObject(i).getString("user_email"));
+                                    email2.setText(jsonArray.getJSONObject(i).getString("alt_email"));
+                                    zipcode.setText(jsonArray.getJSONObject(i).getString("zipcode"));
+                                    address.setText(jsonArray.getJSONObject(i).getString("adrs"));
+                                    if (paymentStatus=="null")
                                     {
                                         //OtpAlert();
                                     }
@@ -568,133 +251,6 @@ public class SellerDashboard extends AppCompatActivity
         };
         VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            Uri picUri = data.getData();
-
-            String filePath = getPath(picUri);
-
-
-            imageView.setImageURI(picUri);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
-                super.onActivityResult(requestCode, resultCode, data);
-                return;
-            }
-            Uri[] results = null;
-            // Check that the response is a good one
-            if (resultCode == Activity.RESULT_OK) {
-                if (data == null) {
-                    // If there is not data, then we may have taken a photo
-                    if (mCameraPhotoPath != null) {
-                        results = new Uri[]{Uri.parse(mCameraPhotoPath)};
-                    }
-                } else {
-                    String dataString = data.getDataString();
-                    if (dataString != null) {
-                        results = new Uri[]{Uri.parse(dataString)};
-                    }
-                }
-            }
-            mFilePathCallback.onReceiveValue(results);
-            mFilePathCallback = null;
-        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            if (requestCode != FILECHOOSER_RESULTCODE || mUploadMessage == null) {
-                super.onActivityResult(requestCode, resultCode, data);
-                return;
-            }
-            if (requestCode == FILECHOOSER_RESULTCODE) {
-                if (null == this.mUploadMessage) {
-                    return;
-                }
-                Uri result = null;
-                try {
-                    if (resultCode != RESULT_OK) {
-                        result = null;
-                    } else {
-                        Toast.makeText(getApplicationContext(), "activity :" ,
-                                Toast.LENGTH_LONG).show();
-                        // retrieve from the private variable if the intent is null
-                        result = data == null ? mCapturedImageURI : data.getData();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "activity :" + e,
-                            Toast.LENGTH_LONG).show();
-                }
-                mUploadMessage.onReceiveValue(result);
-                mUploadMessage = null;
-            }
-        }
-        return;
-    }
-
-
-    public void OtpAlert()
-    {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-
-
-        LayoutInflater li = LayoutInflater.from(this);
-        View promptsView = li.inflate(R.layout.pack_activation_alert, null);
-        builder.setCancelable(false);
-        builder.setView(promptsView);
-        final AlertDialog dialog = builder.create();
-        Button editbtn = (Button)promptsView.findViewById(R.id.editbtn);
-        Button confirm = (Button)promptsView.findViewById(R.id.confirm);
-
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent =  new Intent(SellerDashboard.this,PackageActivity.class);
-                startActivity(intent);
-                dialog.dismiss();
-
-            }
-        });
-        editbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent i =  new Intent(SellerDashboard.this,Dashboard.class);
-                startActivity(i);
-                finish();
-            }
-        });
-// Set up the buttons
-
-        dialog.show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getuserdata();
-    }
-
-    private String getPath(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        android.content.CursorLoader loader = new android.content.CursorLoader(getApplicationContext(), contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
-        return result;
-    }
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
