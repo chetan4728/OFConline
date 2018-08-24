@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -218,7 +219,7 @@ public class PackageActivity extends AppCompatActivity {
 
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,"http://ofconline.in/subscription",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,"http://ofconline.in/Payment/adnroid_pay",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -240,15 +241,24 @@ public class PackageActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("stripeToken",token);
                 params.put("price", String.valueOf("50"));
-
+                params.put("pack_id", String.valueOf("1"));
                 params.put("pack_val", String.valueOf("50"));
                 params.put("pack_person", String.valueOf("1"));
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolllyRequest.getInstance(this).addToRequestQueue(stringRequest);
 
     }
+
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
