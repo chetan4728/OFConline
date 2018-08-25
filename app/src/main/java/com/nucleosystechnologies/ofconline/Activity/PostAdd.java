@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,7 +73,11 @@ public class PostAdd extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_add);
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setTitle("Post Your Aid");
         catname = (EditText)findViewById(R.id.name);
 
         Datalist = new ArrayList<>();
@@ -87,7 +92,7 @@ public class PostAdd extends AppCompatActivity {
                 String cat_id = callImage.getTag().toString();
                 String getname = String.valueOf(catname.getText());
 
-                Toast.makeText(PostAdd.this, ""+getname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostAdd.this, ""+getname, Toast.LENGTH_SHORT).show();
 
                 if(position>0)
                 {
@@ -415,5 +420,10 @@ public class PostAdd extends AppCompatActivity {
                 exception.printStackTrace();
             }
         }
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

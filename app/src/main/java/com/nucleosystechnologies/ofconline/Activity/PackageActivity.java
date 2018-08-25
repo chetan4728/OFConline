@@ -6,11 +6,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,12 +54,17 @@ public class PackageActivity extends AppCompatActivity {
     ArrayList<Package_model> package_models;
     ListView pkage;
     Button plan1,plan2;
+    String Price1,Price2;
+    String home_aid_string,inner_aid_string;
     Card card;
+    RadioButton homepck,innerpack;
     Stripe stripe;
     Integer amount;
+    String finalprice;
     String name;
     Token tok;
-
+    WebView webView;
+    private WebSettings webSettings;
     CardInputWidget mCardInputWidget;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,37 +77,11 @@ public class PackageActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setTitle("Select Package");
-        plan1 = (Button)findViewById(R.id.plan1);
-        plan2 = (Button)findViewById(R.id.paln2);
-        plan1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OtpAlert();
-            }
-        });
-        plan2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OtpAlert();
-            }
-        });
+        homepck = (RadioButton)findViewById(R.id.homepck);
+        innerpack = (RadioButton)findViewById(R.id.innerpack);
 
-        amount = 500;
-        name = "500";
-        stripe = new Stripe(getApplicationContext(),"pk_test_AARyUyZkzPCCc060fxvm2Ond");
 
-        //pkage = (ListView)findViewById(R.id.pkage);
-     //   loadadd();
-    }
-
-    public void loadadd()
-    {
-        final ProgressDialog progressDialog = new ProgressDialog(PackageActivity.this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-        progressDialog.setCancelable(false);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.get_package,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://ofconline.in/Payment/aidpan",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -104,26 +90,14 @@ public class PackageActivity extends AppCompatActivity {
                             JSONObject obj = new JSONObject(response);
                             if(obj.getString("status").equals("200"))
                             {
-                                //Toast.makeText(getApplicationContext(), ""+response, Toast.LENGTH_SHORT).show();
                                 JSONArray jsonArray = obj.getJSONArray("data");
+                                home_aid_string  = jsonArray.getJSONObject(0).getString("home_aid");
+                                inner_aid_string  = jsonArray.getJSONObject(0).getString("inner_aid");
+                                homepck.setTag(home_aid_string);
+                                innerpack.setTag(inner_aid_string);
 
-                                for (int i=0;i<jsonArray.length();i++)
-                                {
-                                    Package_model model =  new Package_model();
-                                    model.setPkg_id(jsonArray.getJSONObject(i).getInt("pkg_id"));
-                                    model.setPkg_name(jsonArray.getJSONObject(i).getString("pkg_name"));
-                                    model.setPkg_detail(jsonArray.getJSONObject(i).getJSONArray("pkg_detail"));
-                                    model.setPkg_limit(jsonArray.getJSONObject(i).getString("pkg_limit"));
-                                    model.setPkg_price(jsonArray.getJSONObject(i).getString("pkg_price"));
-                                    model.setPkg_validity(jsonArray.getJSONObject(i).getString("pkg_validity"));
+                                homepck.setChecked(true);
 
-                                    package_models.add(model);
-                                }
-
-                                PackageAdapter packageAdapter = new PackageAdapter(getApplicationContext(),package_models);
-
-                                pkage.setAdapter(packageAdapter);
-                                progressDialog.hide();
 
                             }
                             else if (obj.getString("status").equals("400"))
@@ -147,84 +121,39 @@ public class PackageActivity extends AppCompatActivity {
                 });
         VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
-    }
-
-    public void OtpAlert()
-    {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-
-
-        LayoutInflater li = LayoutInflater.from(this);
-        View promptsView = li.inflate(R.layout.pack_activation_alert, null);
-        builder.setCancelable(false);
-        builder.setView(promptsView);
-        final AlertDialog dialog = builder.create();
-
-
-
-        Button editbtn = (Button)promptsView.findViewById(R.id.editbtn);
-        Button confirm = (Button)promptsView.findViewById(R.id.confirm);
-
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                card = new Card("4242424242424242", 12, 2019, "123");
-
-                card.setCurrency("usd");
-                card.setName("Theodhor Pandeli");
-                card.setAddressZip("1000");
-        /*
-        card.setNumber(4242424242424242);
-        card.setExpMonth(12);
-        card.setExpYear(19);
-        card.setCVC("123");
-        */
-
-
-                stripe.createToken(card, "pk_test_AARyUyZkzPCCc060fxvm2Ond", new TokenCallback() {
-                    public void onSuccess(Token token) {
-                        // TODO: Send Token information to your backend to initiate a charge
-                        Toast.makeText(getApplicationContext(), "Token created: " + token.getId(), Toast.LENGTH_LONG).show();
-                        tok = token;
-                        verify(token.getId());
-
-                    }
-
-                    public void onError(Exception error) {
-                        Log.d("Stripe", error.getLocalizedMessage());
-                    }
-                });
-
-            }
-        });
-        editbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dialog.dismiss();
-            }
-        });
-// Set up the buttons
-
-        dialog.show();
-    }
-
-
-    public void verify(final String token)
-    {
 
 
 
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,"http://ofconline.in/Payment/adnroid_pay",
+        StringRequest stringRequest2 = new StringRequest(Request.Method.GET, "http://ofconline.in/Payment/bussiness_promotion",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-                         Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if(obj.getString("status").equals("200"))
+                            {
+                                JSONArray jsonArray = obj.getJSONArray("data");
+                                Price2  = jsonArray.getJSONObject(0).getString("plan_price");
+
+
+
+
+
+
+                            }
+                            else if (obj.getString("status").equals("400"))
+                            {
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -233,30 +162,63 @@ public class PackageActivity extends AppCompatActivity {
 
                         //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }) {
+                });
+        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest2);
 
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+        RadioGroup rg = (RadioGroup) findViewById(R.id.allradio);
 
-                Map<String, String> params = new HashMap<>();
-                params.put("stripeToken",token);
-                params.put("price", String.valueOf("50"));
-                params.put("pack_id", String.valueOf("1"));
-                params.put("pack_val", String.valueOf("50"));
-                params.put("pack_person", String.valueOf("1"));
-                return params;
+
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    case R.id.homepck:
+                        finalprice = String.valueOf(homepck.getTag());
+                        // do operations specific to this selection
+                        break;
+                    case R.id.innerpack:
+                        finalprice = String.valueOf(innerpack.getTag());
+                        break;
+
+                }
             }
+        });
+
+        plan1 = (Button)findViewById(R.id.plan1);
+        plan2 = (Button)findViewById(R.id.paln2);
+        plan1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json; charset=utf-8");
-                return headers;
+            public void onClick(View view) {
+
+                //Toast.makeText(PackageActivity.this, ""+finalprice, Toast.LENGTH_SHORT).show();
+                Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
+                Bundle bundle =  new Bundle();
+                bundle.putString("price",finalprice);
+                i.putExtras(bundle);
+                startActivity(i);
+
             }
-        };
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        VolllyRequest.getInstance(this).addToRequestQueue(stringRequest);
+        });
+        plan2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // Toast.makeText(PackageActivity.this, ""+Price2, Toast.LENGTH_SHORT).show();
+                Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
+                Bundle bundle =  new Bundle();
+                bundle.putString("price",Price2);
+                i.putExtras(bundle);
+                startActivity(i);
+            }
+        });
 
     }
+
+
+
+
+
+
+
 
 
     @Override

@@ -55,13 +55,13 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:text="HOME Aid Package"
-                    android:id="@+id/home"
+                    android:id="@+id/homepck"
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:text="Inner Aid Package"
-                    android:id="@+id/inner"
+                    android:id="@+id/innerpack"
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
             </RadioGroup>

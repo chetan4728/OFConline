@@ -5,39 +5,19 @@
     android:orientation="vertical"
     android:layout_height="400dp">
 
-
-    <com.stripe.android.view.CardInputWidget
-        android:id="@+id/card_input_widget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
-
-    <LinearLayout
+    <WebView
         android:layout_width="match_parent"
-        android:layout_marginTop="30dp"
-        android:layout_height="wrap_content">
+        android:id="@+id/payment"
+        android:visibility="gone"
+        android:layout_height="match_parent"></WebView>
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="#00A594"
-            android:textColor="#fff"
-            android:id="@+id/editbtn"
-            android:text="CANCEL"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="#00A594"
-            android:textColor="#fff"
-            android:id="@+id/confirm"
-            android:text="PACKAGES"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:padding="10dp"
+        android:text="Transaction is processing..."
+        android:textSize="20sp"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

@@ -64,7 +64,9 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".Activity.AdvertiseListing" />
         <activity android:name=".Activity.PackageActivity" />
-        <activity android:name=".Activity.PostAdd"></activity>
+        <activity android:name=".Activity.PostAdd" />
+        <activity android:name=".Activity.PaymentActivity" />
+        <activity android:name=".Activity.PaymentSuccsess"></activity>
     </application>
 
 </manifest>

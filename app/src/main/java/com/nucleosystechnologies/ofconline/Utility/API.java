@@ -27,4 +27,5 @@ public class API {
   public static String getuser = Domain+"Builders/getProfile";
   public static String Updateuser = Domain+"Builders/updateprofile";
   public static String UpdateAdd = Domain+"Builders/updateAddStatus";
+  public static String GETTRANS = Domain+"Payment/get_tran_detail";
 }
