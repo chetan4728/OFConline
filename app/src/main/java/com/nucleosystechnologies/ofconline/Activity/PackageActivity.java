@@ -31,6 +31,7 @@ import com.nucleosystechnologies.ofconline.Model.Addvertise_model;
 import com.nucleosystechnologies.ofconline.Model.Package_model;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
+import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
@@ -56,6 +57,7 @@ public class PackageActivity extends AppCompatActivity {
     Button plan1,plan2;
     String Price1,Price2;
     String home_aid_string,inner_aid_string;
+    AppSharedPreferences appSharedPreferences;
     Card card;
     RadioButton homepck,innerpack;
     Stripe stripe;
@@ -63,6 +65,7 @@ public class PackageActivity extends AppCompatActivity {
     String finalprice;
     String name;
     Token tok;
+    String reminder_flag,pacakgeName,Reminder;
     WebView webView;
     private WebSettings webSettings;
     CardInputWidget mCardInputWidget;
@@ -71,7 +74,7 @@ public class PackageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package);
         package_models =  new ArrayList<>();
-
+        appSharedPreferences = new AppSharedPreferences(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -80,7 +83,7 @@ public class PackageActivity extends AppCompatActivity {
         homepck = (RadioButton)findViewById(R.id.homepck);
         innerpack = (RadioButton)findViewById(R.id.innerpack);
 
-
+        getuserdata();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://ofconline.in/Payment/aidpan",
                 new Response.Listener<String>() {
                     @Override
@@ -189,25 +192,36 @@ public class PackageActivity extends AppCompatActivity {
         plan1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //Toast.makeText(PackageActivity.this, ""+finalprice, Toast.LENGTH_SHORT).show();
-                Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
-                Bundle bundle =  new Bundle();
-                bundle.putString("price",finalprice);
-                i.putExtras(bundle);
-                startActivity(i);
+               if(reminder_flag.equals("0")) {
+                   //Toast.makeText(PackageActivity.this, ""+finalprice, Toast.LENGTH_SHORT).show();
+                   Intent i = new Intent(PackageActivity.this, PaymentActivity.class);
+                   Bundle bundle = new Bundle();
+                   bundle.putString("price", finalprice);
+                   i.putExtras(bundle);
+                   startActivity(i);
+               }
+               else
+               {
+                   Toast.makeText(PackageActivity.this, "You currently on "+pacakgeName+" will expire on "+Reminder, Toast.LENGTH_SHORT).show();
+               }
 
             }
         });
         plan2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(reminder_flag.equals("0")) {
                // Toast.makeText(PackageActivity.this, ""+Price2, Toast.LENGTH_SHORT).show();
                 Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
                 Bundle bundle =  new Bundle();
                 bundle.putString("price",Price2);
                 i.putExtras(bundle);
                 startActivity(i);
+                }
+                else
+                {
+                    Toast.makeText(PackageActivity.this, "You currently on "+pacakgeName+" will expire on "+Reminder, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -215,7 +229,71 @@ public class PackageActivity extends AppCompatActivity {
 
 
 
+    public void getuserdata()
+    {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.GETTRANS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            Log.d("response",response);
+
+                            if(obj.getString("status").equals("200"))
+                            {
+                                JSONArray jsonArray = obj.getJSONArray("data");
+
+                                for (int i=0;i<jsonArray.length();i++)
+                                {
+
+                                    TextView  current_package = (TextView)findViewById(R.id.current_package);
+                                    TextView  reminder = (TextView)findViewById(R.id.reminder);
+
+                                    current_package.setText("Your Currently Selected Package: "+jsonArray.getJSONObject(i).getString("package_selected")
+                                );
+                                    reminder.setText("Package Renewal Date: "+jsonArray.getJSONObject(i).getString("aid_renewal")
+                                    );
+
+                                    reminder_flag = jsonArray.getJSONObject(i).getString("remainder_flag");
+                                    pacakgeName=  jsonArray.getJSONObject(i).getString("package_selected");
+                                    Reminder = jsonArray.getJSONObject(i).getString("remainder_date");
+                                }
+
+
+
+                            }
+                            else if (obj.getString("status").equals("400"))
+                            {
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+                params.put("mast_id",appSharedPreferences.pref.getString(AppSharedPreferences.mast_id,""));
+
+                return params;
+            }
+        };
+        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
 
 
 

@@ -516,7 +516,11 @@ public class PostAdd extends AppCompatActivity {
         return result;
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 
 
