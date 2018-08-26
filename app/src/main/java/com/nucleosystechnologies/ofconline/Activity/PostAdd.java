@@ -1,7 +1,9 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -49,15 +51,18 @@ import java.util.Timer;
 public class PostAdd extends AppCompatActivity {
     AppSharedPreferences sharedPreferences;
 
+    ArrayList<String> MenuName;
+    ArrayList<Integer> ImageList;
+
+
+
+
     private final static int FILECHOOSER_RESULTCODE=1;
 
-    int currentPage = 0;
-    Timer timer;
-    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
-    final long PERIOD_MS = 3000;
+
     ProgressDialog pDialog;
 
-    WebView webView;
+    WebView  webView;
     private static final int INPUT_FILE_REQUEST_CODE = 1;
     ArrayList<CategoryModel> Datalist;
     private static final String TAG = SellerDashboard.class.getSimpleName();
@@ -68,31 +73,24 @@ public class PostAdd extends AppCompatActivity {
     private String mCameraPhotoPath;
     ImageView imageView;
     Spinner category;
-    EditText catname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_add);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle("Post Your Aid");
-        catname = (EditText)findViewById(R.id.name);
 
-        Datalist = new ArrayList<>();
+        final EditText name = (EditText)findViewById(R.id.name);
+
+
         category = (Spinner) findViewById(R.id.category);
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                TextView callImage = (TextView)findViewById(R.id.cat_name);
+                TextView callImage = (TextView)view.findViewById(R.id.cat_name);
 
 
                 String cat_id = callImage.getTag().toString();
-                String getname = String.valueOf(catname.getText());
-
-                //Toast.makeText(PostAdd.this, ""+getname, Toast.LENGTH_SHORT).show();
+                String getname = name.getText().toString();
 
                 if(position>0)
                 {
@@ -117,62 +115,37 @@ public class PostAdd extends AppCompatActivity {
             Intent intent = new Intent(PostAdd.this, UserProfile.class);
             startActivity(intent);
         }
+
+
         webView = (WebView)findViewById(R.id.webid);
         imageView = (ImageView) findViewById(R.id.imageView);
 
         webSettings = webView.getSettings();
+
+
+
+
+
+        MenuName = new ArrayList<>();
+        ImageList = new ArrayList<>();
+
+        MenuName.add("Home");
+        MenuName.add("Package");
+        MenuName.add("Advertisement");
+        MenuName.add("Setting");
+        MenuName.add("Logout");
+        ImageList.add(R.drawable.seller_home);
+        ImageList.add(R.drawable.seller_package);
+        ImageList.add(R.drawable.seller_advertiesment);
+        ImageList.add(R.drawable.seller_setting);
+        ImageList.add(R.drawable.seller_logout);
+        pDialog = new ProgressDialog(this);
+
+
+        Datalist = new ArrayList<>();
         loadCat();
     }
-    public void loadCat()
-    {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, API.CATEGORY,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-                            JSONObject obj = new JSONObject(response);
-                            if(obj.getString("status").equals("200"))
-                            {
-                                JSONArray jsonArray = obj.getJSONArray("data");
-
-                                for (int i=0;i<jsonArray.length();i++)
-                                {
-                                    CategoryModel model =  new CategoryModel();
-                                    model.setCategory_id(jsonArray.getJSONObject(i).getInt("category_id"));
-                                    model.setName(jsonArray.getJSONObject(i).getString("name"));
-                                    model.setDescription(jsonArray.getJSONObject(i).getString("description"));
-                                    model.setImg(jsonArray.getJSONObject(i).getString("img"));
-                                    Datalist.add(model);
-                                }
-                                CategoryListAdapter categoryListAdapter =  new CategoryListAdapter(getApplicationContext(),R.layout.category_spinner_item,Datalist);
-                                category.setAdapter(categoryListAdapter);
-                                // categoryList.setAdapter(categoryAdapter);
-
-
-                            }
-                            else if (obj.getString("status").equals("400"))
-                            {
-
-                            }
-
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-    }
     public void callImage(String name,String cat)
     {
         webSettings.setJavaScriptEnabled(true);
@@ -260,6 +233,56 @@ public class PostAdd extends AppCompatActivity {
         webView.loadDataWithBaseURL("",data,"text/html","UTF-8","");
     }
 
+    public void loadCat()
+    {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, API.CATEGORY,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if(obj.getString("status").equals("200"))
+                            {
+                                JSONArray jsonArray = obj.getJSONArray("data");
+
+                                for (int i=0;i<jsonArray.length();i++)
+                                {
+                                    CategoryModel model =  new CategoryModel();
+                                    model.setCategory_id(jsonArray.getJSONObject(i).getInt("category_id"));
+                                    model.setName(jsonArray.getJSONObject(i).getString("name"));
+                                    model.setDescription(jsonArray.getJSONObject(i).getString("description"));
+                                    model.setImg(jsonArray.getJSONObject(i).getString("img"));
+                                    Datalist.add(model);
+                                }
+                                CategoryListAdapter categoryListAdapter =  new CategoryListAdapter(getApplicationContext(),R.layout.category_spinner_item,Datalist);
+                                category.setAdapter(categoryListAdapter);
+                                // categoryList.setAdapter(categoryAdapter);
+
+
+                            }
+                            else if (obj.getString("status").equals("400"))
+                            {
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -421,9 +444,83 @@ public class PostAdd extends AppCompatActivity {
             }
         }
     }
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Uri picUri = data.getData();
+
+            String filePath = getPath(picUri);
+
+
+            imageView.setImageURI(picUri);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
+                super.onActivityResult(requestCode, resultCode, data);
+                return;
+            }
+            Uri[] results = null;
+            // Check that the response is a good one
+            if (resultCode == Activity.RESULT_OK) {
+                if (data == null) {
+                    // If there is not data, then we may have taken a photo
+                    if (mCameraPhotoPath != null) {
+                        results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                    }
+                } else {
+                    String dataString = data.getDataString();
+                    if (dataString != null) {
+                        results = new Uri[]{Uri.parse(dataString)};
+                    }
+                }
+            }
+            mFilePathCallback.onReceiveValue(results);
+            mFilePathCallback = null;
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            if (requestCode != FILECHOOSER_RESULTCODE || mUploadMessage == null) {
+                super.onActivityResult(requestCode, resultCode, data);
+                return;
+            }
+            if (requestCode == FILECHOOSER_RESULTCODE) {
+                if (null == this.mUploadMessage) {
+                    return;
+                }
+                Uri result = null;
+                try {
+                    if (resultCode != RESULT_OK) {
+                        result = null;
+                    } else {
+                        Toast.makeText(getApplicationContext(), "activity :" ,
+                                Toast.LENGTH_LONG).show();
+                        // retrieve from the private variable if the intent is null
+                        result = data == null ? mCapturedImageURI : data.getData();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "activity :" + e,
+                            Toast.LENGTH_LONG).show();
+                }
+                mUploadMessage.onReceiveValue(result);
+                mUploadMessage = null;
+            }
+        }
+        return;
     }
+    private String getPath(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        android.content.CursorLoader loader = new android.content.CursorLoader(getApplicationContext(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
+
+
+
+
+
+
+
+
 }
