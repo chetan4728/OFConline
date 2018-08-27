@@ -95,6 +95,7 @@ public class SellerDashboard extends AppCompatActivity
     ArrayList<CategoryModel> Datalist;
     AppSharedPreferences sharedPreferences;
     String paymentStatus;
+    Button aid,postaid;
     TextView  firstname,lasttname,mobile,mobile2,zipcode,address,email,email2,password,country,state,city;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,19 +126,9 @@ public class SellerDashboard extends AppCompatActivity
             }
         });
 
-        firstname = (TextView)findViewById(R.id.firstname);
-        lasttname = (TextView)findViewById(R.id.lasttname);
-        mobile = (TextView)findViewById(R.id.mobile);
-        mobile2 = (TextView)findViewById(R.id.mobile2);
-        country = (TextView) findViewById(R.id.country);
-        state = (TextView)findViewById(R.id.state);
-        city = (TextView)findViewById(R.id.city);
-        zipcode = (TextView)findViewById(R.id.zipcode);
-        address = (TextView)findViewById(R.id.address);
-        email = (TextView)findViewById(R.id.email);
-        email2 = (TextView)findViewById(R.id.email2);
-        password = (TextView)findViewById(R.id.password);
 
+
+        getdashbaorddata();
 
         MenuName = new ArrayList<>();
         ImageList = new ArrayList<>();
@@ -145,12 +136,10 @@ public class SellerDashboard extends AppCompatActivity
         MenuName.add("Home");
         MenuName.add("Package");
         MenuName.add("Advertisement");
-        MenuName.add("Setting");
         MenuName.add("Logout");
         ImageList.add(R.drawable.seller_home);
         ImageList.add(R.drawable.seller_package);
         ImageList.add(R.drawable.seller_advertiesment);
-        ImageList.add(R.drawable.seller_setting);
         ImageList.add(R.drawable.seller_logout);
         pDialog = new ProgressDialog(this);
         menu_content_adapter menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);
@@ -161,7 +150,24 @@ public class SellerDashboard extends AppCompatActivity
 
         TextView headername = (TextView)header.findViewById(R.id.headername);
         headername.setText(sharedPreferences.pref.getString(sharedPreferences.FirstName,"")+" "+sharedPreferences.pref.getString(sharedPreferences.LastName,""));
+        aid = (Button)findViewById(R.id.aid);
+        postaid = (Button)findViewById(R.id.postaid);
 
+        aid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i  = new Intent(SellerDashboard.this,AdvertiseListing.class);
+                startActivity(i);
+            }
+        });
+
+        postaid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i  = new Intent(SellerDashboard.this,PostAdd.class);
+                startActivity(i);
+            }
+        });
         Datalist = new ArrayList<>();
         getuserdata();
     }
@@ -175,6 +181,74 @@ public class SellerDashboard extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void getdashbaorddata()
+    {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.getdashboard,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject obj = new JSONObject(response);
+
+                            if(obj.getString("status").equals("200"))
+                            {
+                                JSONArray jsonArray = obj.getJSONArray("data");
+
+                                for (int i=0;i<jsonArray.length();i++)
+                                {
+
+
+
+                                    TextView totalaid =  (TextView)findViewById(R.id.totalaid);
+                                    TextView aidPackage =  (TextView)findViewById(R.id.aidPackage);
+                                    TextView rewaldate =  (TextView)findViewById(R.id.rewaldate);
+
+
+
+                                    totalaid.setText(jsonArray.getJSONObject(i).getString("add_count"));
+
+                                    aidPackage.setText("Your Currently Selected Package: "+jsonArray.getJSONObject(i).getString("package_selected")
+                                    );
+                                    rewaldate.setText("Package Renewal Date: "+jsonArray.getJSONObject(i).getString("aid_renewal")
+                                    );
+                                }
+
+
+
+                            }
+                            else if (obj.getString("status").equals("400"))
+                            {
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+                params.put("mast_id",sharedPreferences.pref.getString(AppSharedPreferences.mast_id,""));
+
+                return params;
+            }
+        };
+        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
 
@@ -199,15 +273,8 @@ public class SellerDashboard extends AppCompatActivity
 
                                     sharedPreferences.editor.putString(AppSharedPreferences.PAYMENT_STATUS,paymentStatus);
                                     sharedPreferences.editor.commit();
-                                    password.setText(jsonArray.getJSONObject(i).getString("user_pass"));
-                                    firstname.setText(jsonArray.getJSONObject(i).getString("first_name"));
-                                    lasttname.setText(jsonArray.getJSONObject(i).getString("last_name"));
-                                    mobile.setText(jsonArray.getJSONObject(i).getString("mobile"));
-                                    mobile2.setText(jsonArray.getJSONObject(i).getString("alt_contact"));
-                                    email.setText(jsonArray.getJSONObject(i).getString("user_email"));
-                                    email2.setText(jsonArray.getJSONObject(i).getString("alt_email"));
-                                    zipcode.setText(jsonArray.getJSONObject(i).getString("zipcode"));
-                                    address.setText(jsonArray.getJSONObject(i).getString("adrs"));
+
+
                                     if (paymentStatus=="null")
                                     {
                                         //OtpAlert();

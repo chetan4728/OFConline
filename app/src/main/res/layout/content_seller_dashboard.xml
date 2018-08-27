@@ -26,13 +26,15 @@
                     android:layout_height="100dp" />
 
                 <Button
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="25dp"
+                    android:background="#fff"
+                    android:textColor="@color/colorPrimary"
                     android:layout_marginTop="20dp"
                     android:id="@+id/edit"
                     android:text="Edit Profile"
-                    android:layout_marginRight="40dp"
+                    android:layout_marginRight="22dp"
                     android:layout_height="wrap_content" />
 
                 <LinearLayout
@@ -42,176 +44,133 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:padding="10dp"
-                        android:hint="First Name"
-                        android:id="@+id/firstname"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:layout_marginLeft="5dp"
-                        android:padding="10dp"
-                        android:id="@+id/lasttname"
-                        android:hint="Last Name"
+
+              <LinearLayout
+                  android:layout_weight="1"
+                  android:layout_width="150dp"
+                  android:background="@drawable/grid_items_border"
+
+                  android:layout_marginLeft="5dp"
+                  android:orientation="vertical"
+                  android:layout_height="150dp">
+
+                  <TextView
+                      android:layout_width="match_parent"
+                      android:text="Total Aid "
+                      android:textAlignment="center"
+                      android:paddingTop="10dp"
+                      android:textStyle="bold"
+                      android:textSize="20sp"
+                      android:layout_height="wrap_content" />
+
+                  <TextView
+                      android:layout_width="match_parent"
+                      android:text="30"
+                      android:textAlignment="center"
+                      android:id="@+id/totalaid"
+                      android:paddingTop="12dp"
+                      android:textStyle="bold"
+                      android:textSize="25sp"
+                      android:layout_height="80dp" />
+                  <Button
+                      android:layout_width="match_parent"
+                      android:text="View"
+                      android:background="@color/colorPrimary"
+                      android:id="@+id/aid"
+                      android:textAlignment="center"
+                      android:textColor="#ffff"
+                      android:layout_gravity="center_vertical"
+                      android:textSize="18sp"
+                      android:layout_height="match_parent" ></Button>
+
+
+              </LinearLayout>
+
+                    <LinearLayout
                         android:layout_weight="1"
-                        android:layout_height="wrap_content" />
+                        android:orientation="vertical"
+                        android:background="@drawable/grid_items_border"
+                        android:layout_width="150dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_height="150dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text="Total Enquiry"
+                            android:textAlignment="center"
+                            android:paddingTop="10dp"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text="0"
+                            android:textAlignment="center"
+                            android:paddingTop="10dp"
+                            android:textStyle="bold"
+                            android:textSize="25sp"
+                            android:layout_height="80dp" />
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:text="View"
+                            android:background="@color/colorPrimary"
+                            android:textAlignment="center"
+                            android:textColor="#ffff"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="18sp"
+                            android:layout_height="match_parent" ></Button>
+
+
+
+            </LinearLayout>
+
 
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:padding="10dp"
-                        android:id="@+id/mobile"
-                        android:hint="Pri Contact"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:layout_marginLeft="5dp"
-                        android:padding="10dp"
-                        android:hint="Sec Contact"
-                        android:id="@+id/mobile2"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:id="@+id/country"
-                        android:padding="10dp"
-                        android:hint="Country"
-                        android:layout_weight="1"
-                        android:layout_height="40dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:layout_marginLeft="5dp"
-                        android:id="@+id/state"
-                        android:padding="10dp"
-                        android:hint="State"
-                        android:layout_weight="1"
-                        android:layout_height="40dp" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:id="@+id/city"
-                        android:hint="City"
-                        android:padding="10dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:layout_marginLeft="5dp"
-                        android:padding="10dp"
-                        android:id="@+id/zipcode"
-                        android:hint="Zipcode"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:padding="10dp"
-                        android:id="@+id/address"
-                        android:hint="Address"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:layout_marginLeft="5dp"
-                        android:padding="10dp"
-                        android:hint="Email"
-                        android:id="@+id/email"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-
-
-                </LinearLayout>
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="25dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
+                    android:background="@drawable/grid_items_border"
+                    android:layout_height="match_parent">
+
                     <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:id="@+id/email2"
-                        android:padding="10dp"
-                        android:hint="Alt Email"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:text="Your Current Aid Package is :"
+                        android:textSize="12sp"
+                        android:id="@+id/aidPackage"
+                        android:layout_margin="5dp"
+                        android:textStyle="bold"
+                        android:padding="5dp"
                         android:layout_height="wrap_content" />
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:background="#ddd"
-                        android:layout_marginLeft="5dp"
-                        android:padding="10dp"
-                        android:id="@+id/password"
-                        android:hint="Password"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:text="package Renewal Date :"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_margin="5dp"
+                        android:id="@+id/rewaldate"
+                        android:padding="5dp"
                         android:layout_height="wrap_content" />
-
-
+                    <Button
+                        android:layout_width="match_parent"
+                        android:background="@color/colorPrimary"
+                        android:textColor="#fff"
+                        android:text="Post Advertiesment"
+                        android:id="@+id/postaid"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
-
-
-
 
             </LinearLayout>
 

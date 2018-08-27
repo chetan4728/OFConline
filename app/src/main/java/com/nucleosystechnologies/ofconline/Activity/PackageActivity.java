@@ -46,7 +46,10 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -189,39 +192,98 @@ public class PackageActivity extends AppCompatActivity {
 
         plan1 = (Button)findViewById(R.id.plan1);
         plan2 = (Button)findViewById(R.id.paln2);
+
+
+
         plan1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if(reminder_flag.equals("0")) {
-                   //Toast.makeText(PackageActivity.this, ""+finalprice, Toast.LENGTH_SHORT).show();
-                   Intent i = new Intent(PackageActivity.this, PaymentActivity.class);
-                   Bundle bundle = new Bundle();
-                   bundle.putString("price", finalprice);
-                   i.putExtras(bundle);
-                   startActivity(i);
-               }
-               else
-               {
-                   Toast.makeText(PackageActivity.this, "You currently on "+pacakgeName+" will expire on "+Reminder, Toast.LENGTH_SHORT).show();
-               }
+
+               // Toast.makeText(PackageActivity.this, ""+finalprice, Toast.LENGTH_SHORT).show();
+                if(Reminder==null)
+                {
+                    Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
+                    Bundle bundle =  new Bundle();
+                    bundle.putString("price",finalprice);
+                    i.putExtras(bundle);
+                    startActivity(i);
+                }
+                else
+                {
+                    int catalog_outdated = 0;
+                    String valid_until = Reminder;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date strDate = null;
+                    try {
+                        strDate = sdf.parse(valid_until);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if (new Date().after(strDate)) {
+                        catalog_outdated = 1;
+                    }
+
+                    if(catalog_outdated==1) {
+                        // Toast.makeText(PackageActivity.this, ""+Price2, Toast.LENGTH_SHORT).show();
+                        Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
+                        Bundle bundle =  new Bundle();
+                        bundle.putString("price",finalprice);
+                        i.putExtras(bundle);
+                        startActivity(i);
+                    }
+                    else
+                    {
+                        Toast.makeText(PackageActivity.this, "You currently on "+pacakgeName+" will expire on "+Reminder, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
 
             }
         });
         plan2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(reminder_flag.equals("0")) {
-               // Toast.makeText(PackageActivity.this, ""+Price2, Toast.LENGTH_SHORT).show();
-                Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
-                Bundle bundle =  new Bundle();
-                bundle.putString("price",Price2);
-                i.putExtras(bundle);
-                startActivity(i);
+
+                if(Reminder==null)
+                {
+                    Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
+                    Bundle bundle =  new Bundle();
+                    bundle.putString("price",finalprice);
+                    i.putExtras(bundle);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
                 }
                 else
                 {
-                    Toast.makeText(PackageActivity.this, "You currently on "+pacakgeName+" will expire on "+Reminder, Toast.LENGTH_SHORT).show();
+                    int catalog_outdated = 0;
+                    String valid_until = Reminder;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date strDate = null;
+                    try {
+                        strDate = sdf.parse(valid_until);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if (new Date().after(strDate)) {
+                        catalog_outdated = 1;
+                    }
+
+                    if(catalog_outdated==1) {
+                        // Toast.makeText(PackageActivity.this, ""+Price2, Toast.LENGTH_SHORT).show();
+                        Intent  i =  new Intent(PackageActivity.this,PaymentActivity.class);
+                        Bundle bundle =  new Bundle();
+                        bundle.putString("price",Price2);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        i.putExtras(bundle);
+                        startActivity(i);
+                    }
+                    else
+                    {
+                        Toast.makeText(PackageActivity.this, "You currently on "+pacakgeName+" will expire on "+Reminder, Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             }
         });
 

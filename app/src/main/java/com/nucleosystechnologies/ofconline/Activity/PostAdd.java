@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -79,7 +80,11 @@ public class PostAdd extends AppCompatActivity {
         setContentView(R.layout.activity_post_add);
 
         final EditText name = (EditText)findViewById(R.id.name);
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setTitle("Add Advertiesmnet");
 
         category = (Spinner) findViewById(R.id.category);
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -153,6 +158,7 @@ public class PostAdd extends AppCompatActivity {
         webSettings.setAllowFileAccess(true);
         webView.setWebViewClient(new Client());
         webView.setWebChromeClient(new ChromeClient());
+        webView.addJavascriptInterface(new JavaScriptInterface(), "interface");
         if (Build.VERSION.SDK_INT >= 19) {
             webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         }
@@ -231,6 +237,18 @@ public class PostAdd extends AppCompatActivity {
 
 
         webView.loadDataWithBaseURL("",data,"text/html","UTF-8","");
+    }
+
+    private class JavaScriptInterface {
+
+        @JavascriptInterface
+        public void callFromJS() {
+            Intent i = new Intent(PostAdd.this,AdvertiseListing.class);
+            startActivity(i);
+            finish();
+        }
+
+
     }
 
     public void loadCat()

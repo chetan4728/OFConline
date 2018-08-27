@@ -66,7 +66,8 @@
         <activity android:name=".Activity.PackageActivity" />
         <activity android:name=".Activity.PostAdd" />
         <activity android:name=".Activity.PaymentActivity" />
-        <activity android:name=".Activity.PaymentSuccsess"></activity>
+        <activity android:name=".Activity.PaymentSuccsess" />
+        <activity android:name=".Activity.SerachCategory"></activity>
     </application>
 
 </manifest>

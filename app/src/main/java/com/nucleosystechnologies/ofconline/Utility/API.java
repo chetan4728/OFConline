@@ -28,4 +28,7 @@ public class API {
   public static String Updateuser = Domain+"Builders/updateprofile";
   public static String UpdateAdd = Domain+"Builders/updateAddStatus";
   public static String GETTRANS = Domain+"Payment/get_tran_detail";
+  public static String SERACH = Domain+"Builders/serachdata";
+  public static String getdashboard = Domain+"Payment/getdashboard";
+
 }

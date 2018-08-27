@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -97,7 +98,15 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
         headrmobile.setText("+91 "+sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
 
-
+        EditText serach =  (EditText)findViewById(R.id.serach);
+        serach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Dashboard.this,SerachCategory.class);
+                startActivity(i);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
+        });
 
         TextView nameTitle = (TextView)findViewById(R.id.nameTitle);
 
@@ -183,7 +192,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                // Toast.makeText(Dashboard.this, ""+sharedPreferences.pref.getString(sharedPreferences.FirstName,""), Toast.LENGTH_SHORT).show();
                 if(sharedPreferences.pref.getString(sharedPreferences.mast_id,"").isEmpty()) {
                     Intent intent = new Intent(Dashboard.this, LoginActivity.class);
-                    ;
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 
                 }
@@ -191,16 +200,16 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 {
                     if(sharedPreferences.pref.getString(sharedPreferences.isSignup,"").isEmpty()) {
                         Intent intent = new Intent(Dashboard.this, UserProfile.class);
-
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
 
                     }
                     else
                     {
                         Intent intent = new Intent(Dashboard.this, SellerDashboard.class);
-
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                        finish();
+
                     }
                 }
             }
