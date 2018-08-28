@@ -33,6 +33,8 @@ dependencies {
     compile 'com.hbb20:ccp:2.1.2'
     compile 'com.braintreepayments:card-form:3.4.0'
     implementation 'com.stripe:stripe-android:6.1.2'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+
 
 
 }

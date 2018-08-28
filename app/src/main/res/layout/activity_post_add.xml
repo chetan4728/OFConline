@@ -19,17 +19,18 @@
         android:elevation="10dp"
         android:layout_height="wrap_content" />
 
+
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:background="@drawable/place"
         android:scaleType="fitXY"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-
         android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"/>
+        android:layout_marginRight="40dp"
+        android:id="@+id/image"/>
+
     <EditText
         android:layout_width="match_parent"
         android:background="#ddd"
@@ -50,14 +51,30 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
         android:layout_height="40dp"></Spinner>
-    <WebView
+
+    <Button
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:textColor="#fff"
         android:layout_marginTop="10dp"
-        android:id="@+id/webid"
+        android:textSize="20sp"
+        android:text="Choose"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_height="wrap_content">
+        android:id="@+id/choose"/>
 
-    </WebView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:textColor="#fff"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:text="Upload"
+        android:id="@+id/upload"/>
+
 
 </LinearLayout>
