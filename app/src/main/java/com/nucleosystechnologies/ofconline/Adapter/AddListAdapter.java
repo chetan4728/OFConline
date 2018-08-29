@@ -69,35 +69,20 @@ public class AddListAdapter extends BaseAdapter {
 
         ImageView add_img =  (ImageView)view.findViewById(R.id.add_img);
         TextView add_name = (TextView)view.findViewById(R.id.add_name);
-        TextView cat_name = (TextView)view.findViewById(R.id.cat_name);
+
         TextView date = (TextView)view.findViewById(R.id.date);
-        final Switch status = (Switch)view.findViewById(R.id.status);
+        final TextView status = (TextView)view.findViewById(R.id.status);
         add_name.setText(cat.getAdd_name());
-        cat_name.setText(cat.getCat());
+
         date.setText(cat.getCreated_date());
 
         //Toast.makeText(context, ""+cat.getStatus(), Toast.LENGTH_SHORT).show();
         if(cat.getStatus()==1)
         {
-            status.setChecked(true);
+            status.setText("Approved");
+            status.setTextColor(context.getResources().getColor(R.color.colorPrimary));
         }
-        status.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if(status.isChecked()==true)
-                {
-                    updateStatus(cat.getId(),1);
-                    Toast.makeText(context, "Active", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    updateStatus(cat.getId(),0);
-                    Toast.makeText(context, "Inactive", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
 
         LinearLayout delme = (LinearLayout)view.findViewById(R.id.delme);
         delme.setOnClickListener(new View.OnClickListener() {

@@ -30,5 +30,6 @@ public class API {
   public static String GETTRANS = Domain+"Payment/get_tran_detail";
   public static String SERACH = Domain+"Builders/serachdata";
   public static String getdashboard = Domain+"Payment/getdashboard";
+  public static  String PROFILE_PATH = Domain+"upload/user_logo/";
 
 }

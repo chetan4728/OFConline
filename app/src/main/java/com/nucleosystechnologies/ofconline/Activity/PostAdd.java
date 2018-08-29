@@ -3,6 +3,7 @@ package com.nucleosystechnologies.ofconline.Activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,6 +12,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -165,12 +168,7 @@ public class PostAdd extends AppCompatActivity {
         VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
-                return;
-            }
-        }
+
 
 
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -180,12 +178,12 @@ public class PostAdd extends AppCompatActivity {
                 TextView callImage = (TextView)view.findViewById(R.id.cat_name);
 
 
-                 cat_id = callImage.getTag().toString();
-                 getname = name.getText().toString();
+
 
                 if(position>0)
                 {
-
+                    cat_id = callImage.getTag().toString();
+                    getname = name.getText().toString();
                 }
                 else
                 {
@@ -216,22 +214,33 @@ public class PostAdd extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long fileSizeInBytes = file.length();
+// Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+                long fileSizeInKB = fileSizeInBytes / 1024;
+// Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+                long fileSizeInMB = fileSizeInKB / 1024;
 
                 if (cat_id.isEmpty()) {
                     Toast.makeText(PostAdd.this, "Please Select Category", Toast.LENGTH_SHORT).show();
-                } else if (getname.isEmpty()) {
+                } else if (name.getText().toString().isEmpty()) {
                     Toast.makeText(PostAdd.this, "Please Put Aid Name", Toast.LENGTH_SHORT).show();
-                } else {
+                }else if(fileSizeInMB > 2)
+                 {
+
+
+                     Toast.makeText(PostAdd.this, "File size Too large upload less than 2 mb", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
                     progressDialog = new ProgressDialog(PostAdd.this);
                     progressDialog.setMessage("Uploading, please wait...");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
 
 
-                    Thread t = new Thread(new Runnable() {
+                    Thread thread = new Thread() {
                         @Override
                         public void run() {
-
                             String content_type = getMimeType(file.getPath());
 
                             String file_path = file.getAbsolutePath();
@@ -253,25 +262,33 @@ public class PostAdd extends AppCompatActivity {
                                     .url("http://ofconline.in/Builders/get_file_sample")
                                     .post(request_body)
                                     .build();
-
                             try {
                                 Response response = client.newCall(request).execute();
 
                                 if (!response.isSuccessful()) {
                                     throw new IOException("Error : " + response);
                                 }
-                                Toast.makeText(PostAdd.this, "Your add Posted", Toast.LENGTH_SHORT).show();
-                                progressDialog.dismiss();
+                                else
+                                {
+                                    backgroundThreadShortToast(getApplicationContext(),"Adervtiement uploaded succssfully wait's for admns approval");
+                                    progressDialog.dismiss();
+
+                                }
+
 
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
-
                         }
-                    });
+                    };
 
-                    t.start();
+                    thread.start();
+
+
+
+
+
+
 
                 }
             }
@@ -380,6 +397,21 @@ public class PostAdd extends AppCompatActivity {
     }
 
 
+    public void backgroundThreadShortToast(final Context context,
 
+                                           final String msg) {
+        if (context != null && msg != null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Intent i = new Intent(PostAdd.this,AddSuccess.class);
+                    startActivity(i);
+                    finish();
+
+                }
+            });
+        }
+    }
 
 }
