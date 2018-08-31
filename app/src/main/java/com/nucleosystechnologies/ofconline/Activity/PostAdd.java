@@ -169,7 +169,7 @@ public class PostAdd extends AppCompatActivity {
 
 
 
-
+        getname = name.getText().toString();
 
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -183,7 +183,7 @@ public class PostAdd extends AppCompatActivity {
                 if(position>0)
                 {
                     cat_id = callImage.getTag().toString();
-                    getname = name.getText().toString();
+
                 }
                 else
                 {
@@ -222,7 +222,7 @@ public class PostAdd extends AppCompatActivity {
 
                 if (cat_id.isEmpty()) {
                     Toast.makeText(PostAdd.this, "Please Select Category", Toast.LENGTH_SHORT).show();
-                } else if (name.getText().toString().isEmpty()) {
+                } else if (getname.isEmpty()) {
                     Toast.makeText(PostAdd.this, "Please Put Aid Name", Toast.LENGTH_SHORT).show();
                 }else if(fileSizeInMB > 2)
                  {
@@ -256,7 +256,7 @@ public class PostAdd extends AppCompatActivity {
                                     .addFormDataPart("category_id", cat_id)
                                     .addFormDataPart("mast_id",sharedPreferences.pref.getString(sharedPreferences.mast_id,""))
                                     .build();
-                            Log.d("bodyyyyy", String.valueOf(request_body));
+                           // Log.d("bodyyyyy", String.valueOf(request_body));
 
                             Request request = new Request.Builder()
                                     .url("http://ofconline.in/Builders/get_file_sample")
