@@ -16,6 +16,7 @@ import com.nucleosystechnologies.ofconline.Activity.AdvertiseListing;
 import com.nucleosystechnologies.ofconline.Activity.ContactUs;
 import com.nucleosystechnologies.ofconline.Activity.Dashboard;
 import com.nucleosystechnologies.ofconline.Activity.PackageActivity;
+import com.nucleosystechnologies.ofconline.Activity.SellerDashboard;
 import com.nucleosystechnologies.ofconline.Activity.Services;
 import com.nucleosystechnologies.ofconline.Activity.SubCategory;
 import com.nucleosystechnologies.ofconline.Model.CategoryModel;
@@ -85,6 +86,14 @@ public class menu_content_adapter extends BaseAdapter{
                 else if(catname.trim().equals("Services"))
                 {
                     Intent i = new Intent(context, Services.class);
+                    i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+
+                }
+
+                else if(catname.trim().equals("Seller Section"))
+                {
+                    Intent i = new Intent(context, SellerDashboard.class);
                     i.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
 

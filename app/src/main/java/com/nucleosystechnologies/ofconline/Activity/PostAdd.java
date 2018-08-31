@@ -102,6 +102,9 @@ public class PostAdd extends AppCompatActivity {
     String URL ="http://ofconline.in/Builders/upload_aid_file";
     Bitmap bitmap;
     ProgressDialog progressDialog;
+    Boolean upload_flag = false;
+    Boolean cat_flag = false;
+     EditText name;
     String cat_id,getname;
     CategoryListAdapter categoryListAdapter;
     @Override
@@ -109,7 +112,7 @@ public class PostAdd extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_add);
 
-        final EditText name = (EditText)findViewById(R.id.name);
+         name = (EditText)findViewById(R.id.name);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -169,7 +172,7 @@ public class PostAdd extends AppCompatActivity {
 
 
 
-        getname = name.getText().toString();
+
 
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -182,7 +185,8 @@ public class PostAdd extends AppCompatActivity {
 
                 if(position>0)
                 {
-                    cat_id = callImage.getTag().toString();
+                    cat_flag = true;
+                    cat_id = String.valueOf(callImage.getTag());
 
                 }
                 else
@@ -214,82 +218,80 @@ public class PostAdd extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long fileSizeInBytes = file.length();
-// Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
-                long fileSizeInKB = fileSizeInBytes / 1024;
-// Convert the KB to MegaBytes (1 MB = 1024 KBytes)
-                long fileSizeInMB = fileSizeInKB / 1024;
 
-                if (cat_id.isEmpty()) {
+
+                if (cat_flag==false) {
                     Toast.makeText(PostAdd.this, "Please Select Category", Toast.LENGTH_SHORT).show();
-                } else if (getname.isEmpty()) {
+                } else if (name.getText().toString().isEmpty()) {
                     Toast.makeText(PostAdd.this, "Please Put Aid Name", Toast.LENGTH_SHORT).show();
-                }else if(fileSizeInMB > 2)
+                }else if(upload_flag == false)
                  {
 
-
-                     Toast.makeText(PostAdd.this, "File size Too large upload less than 2 mb", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(PostAdd.this, "Please Upload Aid", Toast.LENGTH_SHORT).show();
                 }
-                else
-                {
-                    progressDialog = new ProgressDialog(PostAdd.this);
-                    progressDialog.setMessage("Uploading, please wait...");
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
+                else {
+
+                    long fileSizeInBytes = file.length();
+// Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+                    long fileSizeInKB = fileSizeInBytes / 1024;
+// Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+                    long fileSizeInMB = fileSizeInKB / 1024;
+
+                    if (fileSizeInMB > 2) {
+                        Toast.makeText(PostAdd.this, "File size Too large upload less than 2 mb", Toast.LENGTH_SHORT).show();
+                    } else {
+                        progressDialog = new ProgressDialog(PostAdd.this);
+                        progressDialog.setMessage("Uploading, please wait...");
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
 
 
-                    Thread thread = new Thread() {
-                        @Override
-                        public void run() {
-                            String content_type = getMimeType(file.getPath());
+                        Thread thread = new Thread() {
+                            @Override
+                            public void run() {
+                                String content_type = getMimeType(file.getPath());
 
-                            String file_path = file.getAbsolutePath();
+                                String file_path = file.getAbsolutePath();
 
-                            OkHttpClient client = new OkHttpClient();
-                            RequestBody file_body = RequestBody.create(MediaType.parse(content_type), file);
+                                OkHttpClient client = new OkHttpClient();
+                                RequestBody file_body = RequestBody.create(MediaType.parse(content_type), file);
 
-                            RequestBody request_body = new MultipartBody.Builder()
-                                    .setType(MultipartBody.FORM)
-                                    .addFormDataPart("type", content_type)
-                                    .addFormDataPart("uploaded_file", file_path.substring(file_path.lastIndexOf("/") + 1), file_body)
-                                    .addFormDataPart("name", getname)
-                                    .addFormDataPart("category_id", cat_id)
-                                    .addFormDataPart("mast_id",sharedPreferences.pref.getString(sharedPreferences.mast_id,""))
-                                    .build();
-                           // Log.d("bodyyyyy", String.valueOf(request_body));
+                                RequestBody request_body = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("type", content_type)
+                                        .addFormDataPart("uploaded_file", file_path.substring(file_path.lastIndexOf("/") + 1), file_body)
+                                        .addFormDataPart("name", String.valueOf(name.getText()))
+                                        .addFormDataPart("category_id", cat_id)
+                                        .addFormDataPart("mast_id", sharedPreferences.pref.getString(sharedPreferences.mast_id, ""))
+                                        .build();
+                                // Log.d("bodyyyyy", String.valueOf(request_body));
 
-                            Request request = new Request.Builder()
-                                    .url("http://ofconline.in/Builders/get_file_sample")
-                                    .post(request_body)
-                                    .build();
-                            try {
-                                Response response = client.newCall(request).execute();
+                                Request request = new Request.Builder()
+                                        .url("http://ofconline.in/Builders/get_file_sample")
+                                        .post(request_body)
+                                        .build();
+                                try {
+                                    Response response = client.newCall(request).execute();
 
-                                if (!response.isSuccessful()) {
-                                    throw new IOException("Error : " + response);
+                                    if (!response.isSuccessful()) {
+                                        throw new IOException("Error : " + response);
+                                    } else {
+                                        backgroundThreadShortToast(getApplicationContext(), "Adervtiement uploaded succssfully wait's for admns approval");
+                                        progressDialog.dismiss();
+
+                                    }
+
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                                else
-                                {
-                                    backgroundThreadShortToast(getApplicationContext(),"Adervtiement uploaded succssfully wait's for admns approval");
-                                    progressDialog.dismiss();
-
-                                }
-
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    };
+                        };
 
-                    thread.start();
-
+                        thread.start();
 
 
-
-
-
-
+                    }
                 }
             }
         });
@@ -362,7 +364,7 @@ public class PostAdd extends AppCompatActivity {
                  file = new File(getRealPathFromURI(filePath));
 
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-
+                upload_flag = true;
                 //Setting image to ImageView
                 image.setImageBitmap(bitmap);
             } catch (Exception e) {

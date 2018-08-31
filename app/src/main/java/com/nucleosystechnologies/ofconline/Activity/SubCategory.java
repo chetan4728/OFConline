@@ -1,11 +1,15 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -57,14 +61,22 @@ public class SubCategory extends AppCompatActivity {
         pDialog.setMessage("Loading Data ...");
         pDialog.show();
 
-
+        EditText serach =  (EditText)findViewById(R.id.serach);
+        serach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SubCategory.this,SerachCategory.class);
+                startActivity(i);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
+        });
         Datalist = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, API.SUBCATEGORY,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                        // Toast.makeText(getApplicationContext(), ""+response, Toast.LENGTH_SHORT).show();
-                        // Log.i("reponse",response);
+                         Log.i("reponse",response);
 
                         try {
                             JSONObject obj = new JSONObject(response);
@@ -83,6 +95,7 @@ public class SubCategory extends AppCompatActivity {
                                     model.setState(jsonArray.getJSONObject(i).getString("state"));
                                     model.setCity(jsonArray.getJSONObject(i).getString("city"));
                                     model.setZipcode(jsonArray.getJSONObject(i).getString("zipcode"));
+                                    model.setImg_upload(jsonArray.getJSONObject(i).getString("user_profile"));
                                     Datalist.add(model);
                                 }
 
@@ -94,12 +107,17 @@ public class SubCategory extends AppCompatActivity {
                             else if (obj.getString("status").equals("400"))
                             {
 
+                                Toast.makeText(SubCategory.this, "No data found", Toast.LENGTH_SHORT).show();
+                                pDialog.hide();
                             }
 
 
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+
+                            Toast.makeText(SubCategory.this, "No data found", Toast.LENGTH_SHORT).show();
+                            pDialog.hide();
                         }
                     }
                 },

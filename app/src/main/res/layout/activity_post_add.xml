@@ -18,6 +18,16 @@
         android:background="#fff"
         android:elevation="10dp"
         android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:padding="10dp"
+        android:text="Upload Image less than 2mb"
+        android:textColor="@color/redc"
+        android:textSize="20sp"
+        android:background="#fff"
+        android:elevation="10dp"
+        android:layout_height="wrap_content" />
 
 
     <ImageView

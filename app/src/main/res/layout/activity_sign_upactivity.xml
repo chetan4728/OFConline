@@ -57,6 +57,7 @@
             android:background="#fff"
             android:inputType="phone"
             android:id="@+id/mobile"
+            android:maxLength="10"
             android:layout_marginTop="20dp"
             android:padding="10dp"
             android:hint="MOBILE"

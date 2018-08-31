@@ -36,16 +36,10 @@ public class CategoryListAdapter extends ArrayAdapter {
     private View getCustomView(final int position, View convertView, ViewGroup parent) {
         View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_spinner_item, parent, false);
         final TextView label=(TextView)row.findViewById(R.id.cat_name);
-        if(position==0)
-        {
-            label.setText("Select Category");
-            label.setTag("");
-        }
-        else
-        {
+
             label.setText(data.get(position).getName());
             label.setTag(data.get(position).getCategory_id());
-        }
+
 
 
         return row;

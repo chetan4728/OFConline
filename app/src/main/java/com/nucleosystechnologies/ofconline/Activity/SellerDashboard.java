@@ -1,5 +1,6 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -67,8 +69,10 @@ import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
 import com.nucleosystechnologies.ofconline.Utility.AppController;
 import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
+import com.nucleosystechnologies.ofconline.Utility.CircleTransform;
 import com.nucleosystechnologies.ofconline.Utility.Utility;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -147,6 +151,21 @@ public class SellerDashboard extends AppCompatActivity
         View header=navigationView.getHeaderView(0);
         TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
         headrmobile.setText(sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
+        ImageView profile = (ImageView) header.findViewById(R.id.profile);
+        if(sharedPreferences.pref.getString(sharedPreferences.userprofile,"")!="") {
+
+            profile.setBackground(null);
+            Picasso.with(getApplicationContext()).load(sharedPreferences.pref.getString(sharedPreferences.userprofile, "")).placeholder(R.drawable.place).transform(new CircleTransform()).resize(150, 150)
+                    .centerInside().into(profile);
+            headrmobile.setText("+91 " + sharedPreferences.pref.getString(sharedPreferences.Mobile, ""));
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
+                return;
+            }
+        }
+
 
         TextView headername = (TextView)header.findViewById(R.id.headername);
         headername.setText(sharedPreferences.pref.getString(sharedPreferences.FirstName,"")+" "+sharedPreferences.pref.getString(sharedPreferences.LastName,""));

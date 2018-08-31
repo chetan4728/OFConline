@@ -32,4 +32,7 @@ public class API {
   public static String getdashboard = Domain+"Payment/getdashboard";
   public static  String PROFILE_PATH = Domain+"upload/user_logo/";
 
+  public static String SENDSMS = Domain+"Builders/getmsg";
+  public static String SENDEMAIL = Domain+"Builders/getemail";
+
 }

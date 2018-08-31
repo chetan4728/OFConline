@@ -20,6 +20,7 @@ public class AppSharedPreferences {
     public static final String Mobile = "Mobile";
     public static final String mast_id = "mast_id";
     public static final String isSignup = "isSignup";
+    public static final String userprofile = "userprofile";
     public static final String PAYMENT_STATUS = "PAYMENT_STATUS";
 
     public AppSharedPreferences(Context context)

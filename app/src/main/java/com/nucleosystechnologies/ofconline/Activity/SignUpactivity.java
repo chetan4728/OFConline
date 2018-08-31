@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class SignUpactivity extends AppCompatActivity {
 
@@ -87,7 +88,9 @@ public class SignUpactivity extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(), "Please Enter mobile", Toast.LENGTH_SHORT).show();
                 }
-
+                else if(!isValidEmaillId(email.getText().toString().trim())){
+                    Toast.makeText(getApplicationContext(), "InValid Email Address.", Toast.LENGTH_SHORT).show();
+                }
                 else  if(password.getText().toString().trim().isEmpty())
                 {
                     Toast.makeText(getApplicationContext(), "Please Enter Password", Toast.LENGTH_SHORT).show();
@@ -152,7 +155,15 @@ public class SignUpactivity extends AppCompatActivity {
         VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
     }
+    private boolean isValidEmaillId(String email){
 
+        return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(email).matches();
+    }
     public void signup() {
 
 
@@ -188,11 +199,14 @@ public class SignUpactivity extends AppCompatActivity {
                                 i.putExtras(bundle);
                                 startActivity(i);
                             }
+                            else if (obj.getString("status").equals("201"))
+                            {
+                                Toast.makeText(SignUpactivity.this, "Email Already Exist", Toast.LENGTH_SHORT).show();
+                            }
                             else if (obj.getString("status").equals("400"))
                             {
-                                Toast.makeText(SignUpactivity.this, "Account Created Failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUpactivity.this, "Something wrong", Toast.LENGTH_SHORT).show();
                             }
-
 
                             pDialog.hide();
                         } catch (JSONException e) {

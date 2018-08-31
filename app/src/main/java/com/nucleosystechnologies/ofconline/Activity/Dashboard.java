@@ -45,8 +45,10 @@ import com.nucleosystechnologies.ofconline.Model.CategoryModel;
 import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
 import com.nucleosystechnologies.ofconline.Utility.AppSharedPreferences;
+import com.nucleosystechnologies.ofconline.Utility.CircleTransform;
 import com.nucleosystechnologies.ofconline.Utility.MyGridView;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,7 +102,14 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
         View header=navigationView.getHeaderView(0);
         TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
-        headrmobile.setText("+91 "+sharedPreferences.pref.getString(sharedPreferences.Mobile,""));
+        ImageView profile = (ImageView) header.findViewById(R.id.profile);
+        if(sharedPreferences.pref.getString(sharedPreferences.userprofile,"")!="") {
+
+            profile.setBackground(null);
+            Picasso.with(getApplicationContext()).load(sharedPreferences.pref.getString(sharedPreferences.userprofile, "")).placeholder(R.drawable.place).transform(new CircleTransform()).resize(150, 150)
+                    .centerInside().into(profile);
+            headrmobile.setText("+91 " + sharedPreferences.pref.getString(sharedPreferences.Mobile, ""));
+        }
 
         EditText serach =  (EditText)findViewById(R.id.serach);
         serach.setOnClickListener(new View.OnClickListener() {

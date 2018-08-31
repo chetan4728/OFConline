@@ -260,7 +260,8 @@ public class UserProfile extends AppCompatActivity {
                                     zipcode.setText(jsonArray.getJSONObject(i).getString("zipcode"));
                                     address.setText(jsonArray.getJSONObject(i).getString("adrs"));
 
-
+                                    appSharedPreferences.editor.putString(appSharedPreferences.userprofile,API.PROFILE_PATH+jsonArray.getJSONObject(0).getString("user_profile"));
+                                    appSharedPreferences.editor.commit();
 
                                     State(jsonArray.getJSONObject(i).getString("country"));
                                     city(jsonArray.getJSONObject(i).getString("state"));

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="400dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:text="Please Enter your Query Below"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        android:textSize="18sp"
+        android:textColor="#00A594"
+        android:layout_height="wrap_content" />
+
+
+   <EditText
+
+       android:layout_width="match_parent"
+       android:layout_height="150dp"
+       android:layout_margin="20dp"
+       android:inputType="text|textMultiLine"
+       android:paddingLeft="10dp"
+       android:background="@drawable/border"
+       android:textColor="#333"
+       android:gravity="top"
+       android:id="@+id/msg"
+   />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="#00A594"
+            android:textColor="#fff"
+            android:id="@+id/editbtn"
+            android:text="CANCEL"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="#00A594"
+            android:textColor="#fff"
+            android:id="@+id/confirm"
+            android:text="SEND"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
