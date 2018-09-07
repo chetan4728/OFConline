@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -55,6 +58,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -74,6 +79,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
     String Full_name;
+    ImageView profile;
     private android.app.ActionBar actionBar;
     private String[] tabs = { "Top Rated", "Games", "Movies" };
     @Override
@@ -102,14 +108,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
         View header=navigationView.getHeaderView(0);
         TextView headrmobile = (TextView)header.findViewById(R.id.headrmobile);
-        ImageView profile = (ImageView) header.findViewById(R.id.profile);
-        if(sharedPreferences.pref.getString(sharedPreferences.userprofile,"")!="") {
+         profile = (ImageView) header.findViewById(R.id.profile);
 
-            profile.setBackground(null);
-            Picasso.with(getApplicationContext()).load(sharedPreferences.pref.getString(sharedPreferences.userprofile, "")).placeholder(R.drawable.place).transform(new CircleTransform()).resize(150, 150)
-                    .centerInside().into(profile);
-            headrmobile.setText("+91 " + sharedPreferences.pref.getString(sharedPreferences.Mobile, ""));
-        }
 
         EditText serach =  (EditText)findViewById(R.id.serach);
         serach.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +122,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         });
 
         TextView nameTitle = (TextView)findViewById(R.id.nameTitle);
-
+        headrmobile.setText("+91 " + sharedPreferences.pref.getString(sharedPreferences.Mobile, ""));
         nameTitle.setText("Hello User");
         Viewpager = (ViewPager)findViewById(R.id.vp_slider);
 
@@ -132,11 +132,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         MenuName.add("Home");
         MenuName.add("Services");
         MenuName.add("Contact Us");
-        MenuName.add("Seller Section");
+        MenuName.add("About Us");
         ImageList.add(R.drawable.home);
-        ImageList.add(R.drawable.about);
+        ImageList.add(R.drawable.service);
         ImageList.add(R.drawable.contact);
-        ImageList.add(R.drawable.seller);
+        ImageList.add(R.drawable.about);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
@@ -148,12 +148,73 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         MenuIcon.setAdapter(menu_content_adapter);
 
 
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API.getuser,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
+                        try {
+                            JSONObject obj = new JSONObject(response);
+
+                            if(obj.getString("status").equals("200"))
+                            {
+                                JSONArray jsonArray = obj.getJSONArray("data");
+
+                                for (int i=0;i<jsonArray.length();i++)
+                                {
+
+
+                                    profile.setBackground(null);
+                                    Picasso.with(getApplicationContext()).load(API.PROFILE_PATH+jsonArray.getJSONObject(0).getString("user_profile")).placeholder(R.drawable.place).transform(new CircleTransform()).resize(150, 150)
+                                            .centerInside().into(profile);
+
+
+
+
+
+
+
+
+                                }
+
+
+
+                            }
+                            else if (obj.getString("status").equals("400"))
+                            {
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+                params.put("mast_id",sharedPreferences.pref.getString(AppSharedPreferences.mast_id,""));
+
+                return params;
+            }
+        };
+        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         final MyGridView categoryList = (MyGridView)findViewById(R.id.categoryList);
 
         Datalist = new ArrayList<>();
         AddData =  new ArrayList<>();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, API.CATEGORY,
+        StringRequest stringRequest2 = new StringRequest(Request.Method.GET, API.CATEGORY,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -199,7 +260,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                         //  Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        VolllyRequest.getInstance(getApplicationContext()).addToRequestQueue(stringRequest2);
         //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         loadSlider();
         TextView service = (TextView)findViewById(R.id.service);
@@ -233,6 +294,13 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
     }
+
+    public void getuserdata()
+    {
+
+
+    }
+
 
     @Override
     public void onBackPressed() {

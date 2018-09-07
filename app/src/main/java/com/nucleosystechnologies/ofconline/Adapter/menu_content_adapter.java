@@ -91,7 +91,7 @@ public class menu_content_adapter extends BaseAdapter{
 
                 }
 
-                else if(catname.trim().equals("Seller Section"))
+                else if(catname.trim().equals("About Us"))
                 {
                     Intent i = new Intent(context, SellerDashboard.class);
                     i.addFlags(FLAG_ACTIVITY_NEW_TASK);

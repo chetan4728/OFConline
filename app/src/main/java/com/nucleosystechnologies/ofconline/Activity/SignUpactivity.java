@@ -42,6 +42,7 @@ public class SignUpactivity extends AppCompatActivity {
     Button submit;
     TextView  cat_id;
     ArrayList<CategoryModel> Datalist;
+    ArrayList<String> CategoryList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +54,14 @@ public class SignUpactivity extends AppCompatActivity {
         password = (EditText)findViewById(R.id.password);
         category = (Spinner) findViewById(R.id.category);
         submit = (Button) findViewById(R.id.submit);
+        CategoryList =  new ArrayList<>();
 
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 cat_id = (TextView)view.findViewById(R.id.cat_name);
+                CategoryList.add(cat_id.getText().toString());
+
             }
 
             @Override
@@ -65,6 +69,7 @@ public class SignUpactivity extends AppCompatActivity {
 
             }
         });
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
