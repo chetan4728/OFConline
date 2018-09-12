@@ -600,12 +600,13 @@ public class UserProfile extends AppCompatActivity {
                 image.setBackground(null);
 
 
-                image.setImageBitmap(getclip(bitmap));
+                image.setImageBitmap(bitmap);
 
                 final ProgressDialog  progressDialog = new ProgressDialog(UserProfile.this);
                 progressDialog.setMessage("Uploading, please wait...");
                 progressDialog.setCancelable(false);
                 progressDialog.show();
+                
 
 
                 Thread thread = new Thread() {

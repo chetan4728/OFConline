@@ -76,7 +76,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 if(cardForm.getCardNumber().isEmpty()||cardForm.getCardNumber()=="Null")
                 {
-                    Toast.makeText(PaymentActivity.this, "Please Enter all card Detail"+cardForm.getCardNumber(), Toast.LENGTH_SHORT).show();
+                      Toast.makeText(PaymentActivity.this, "Please Enter all card Detail"+cardForm.getCardNumber(), Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -90,7 +90,7 @@ public class PaymentActivity extends AppCompatActivity {
                 card.setCurrency("usd");
                 card.setName(appSharedPreferences.pref.getString(appSharedPreferences.FirstName,"")+" "+appSharedPreferences.pref.getString(appSharedPreferences.LastName,""));
 
-   /*Test key  pk_test_AARyUyZkzPCCc060fxvm2Ond*/
+               /*Test key  pk_test_AARyUyZkzPCCc060fxvm2Ond*/
                 stripe = new Stripe(getApplicationContext(),"pk_live_IKGKeiX53jNsJ46Pc7oEQCnt");
                 stripe.createToken(card, "pk_live_IKGKeiX53jNsJ46Pc7oEQCnt", new TokenCallback() {
                     public void onSuccess(Token token) {
@@ -101,7 +101,7 @@ public class PaymentActivity extends AppCompatActivity {
                     }
 
                     public void onError(Exception error) {
-                        Log.d("Stripe", error.getLocalizedMessage());
+                        //Log.d("Stripe", error.getLocalizedMessage());
                     }
                 });
                 }
