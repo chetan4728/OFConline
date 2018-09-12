@@ -405,7 +405,16 @@ public class UserProfile extends AppCompatActivity {
                                 country.setAdapter(spinnerAdapter);
                                 // categoryList.setAdapter(categoryAdapter);
                                 //progressDialog.hide();
-                                country.setSelection(c_id-1);
+                              //  country.setSelection(c_id-1);
+
+                                for (int i=0;i<jsonArray.length();i++)
+                                {
+                                    if(c_id == jsonArray.getJSONObject(i).getInt("id"))
+                                    {
+                                        country.setSelection(i);
+                                    }
+
+                                }
 
 
                             }
@@ -456,7 +465,15 @@ public class UserProfile extends AppCompatActivity {
                                 SpinnerAdapter spinnerAdapter =  new SpinnerAdapter(getApplicationContext(),R.layout.category_spinner_item,Statemodel);
                                 state.setAdapter(spinnerAdapter);
                                 // categoryList.setAdapter(categoryAdapter);
-                                state.setSelection(s_is-1);
+                                //state.setSelection(s_is-1);
+                                for (int i=0;i<jsonArray.length();i++)
+                                {
+                                    if(s_is == jsonArray.getJSONObject(i).getInt("id"))
+                                    {
+                                        state.setSelection(i);
+                                    }
+
+                                }
 
                             }
                             else if (obj.getString("status").equals("400"))

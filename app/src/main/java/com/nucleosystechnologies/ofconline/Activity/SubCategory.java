@@ -96,6 +96,7 @@ public class SubCategory extends AppCompatActivity {
                                     model.setCity(jsonArray.getJSONObject(i).getString("city"));
                                     model.setZipcode(jsonArray.getJSONObject(i).getString("zipcode"));
                                     model.setImg_upload(jsonArray.getJSONObject(i).getString("user_profile"));
+                                    model.setMobile(jsonArray.getJSONObject(i).getString("mobile"));
                                     Datalist.add(model);
                                 }
 

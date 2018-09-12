@@ -142,6 +142,14 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
                 return;
             }
+            else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.CALL_PHONE},100);
+                return;
+            }
+            else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.CAMERA},100);
+                return;
+            }
         }
 
         menu_content_adapter  menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);

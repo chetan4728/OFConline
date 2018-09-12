@@ -1,6 +1,7 @@
 package com.nucleosystechnologies.ofconline.Adapter;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -101,31 +102,27 @@ public class SubCategoryAdapter extends BaseAdapter {
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(sharedPreferences.pref.getString(sharedPreferences.mast_id,"").isEmpty()) {
-                    Intent i = new Intent(context, LoginActivity.class);
-                    i.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
 
-                }
-                else {
                     OtpAlertMsg(view, "sms");
-                }
+
             }
         });
 
         email.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
-                if(sharedPreferences.pref.getString(sharedPreferences.mast_id,"").isEmpty()) {
-                    Intent i = new Intent(context, LoginActivity.class);
-                    i.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
+                Intent callIntent =new Intent(Intent.ACTION_CALL);
+                callIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                callIntent.setData(Uri.parse("tel:"+cat.getMobile()));
+                if (ActivityCompat.checkSelfPermission(context,
+                        Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                context.startActivity(callIntent);
 
-                }
-                else {
-                    OtpAlertMsg(view, "email");
-                }
+
             }
 
 
@@ -136,8 +133,7 @@ public class SubCategoryAdapter extends BaseAdapter {
 
 
         //Log.i("IMAGE",API.IMG_PATH+cat.getImg());
-        Picasso.with(context).load(API.PROFILE_PATH+cat.getImg_upload()).placeholder(R.drawable.place).transform(new CircleTransform()).resize(150, 150)
-                .centerInside().into(cat_img);
+        Picasso.with(context).load(API.PROFILE_PATH+cat.getImg_upload()).placeholder(R.drawable.place).into(cat_img);
 
         return view;
     }

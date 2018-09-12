@@ -90,9 +90,9 @@ public class PaymentActivity extends AppCompatActivity {
                 card.setCurrency("usd");
                 card.setName(appSharedPreferences.pref.getString(appSharedPreferences.FirstName,"")+" "+appSharedPreferences.pref.getString(appSharedPreferences.LastName,""));
 
-
-                stripe = new Stripe(getApplicationContext(),"pk_test_AARyUyZkzPCCc060fxvm2Ond");
-                stripe.createToken(card, "pk_test_AARyUyZkzPCCc060fxvm2Ond", new TokenCallback() {
+   /*Test key  pk_test_AARyUyZkzPCCc060fxvm2Ond*/
+                stripe = new Stripe(getApplicationContext(),"pk_live_IKGKeiX53jNsJ46Pc7oEQCnt");
+                stripe.createToken(card, "pk_live_IKGKeiX53jNsJ46Pc7oEQCnt", new TokenCallback() {
                     public void onSuccess(Token token) {
                         // TODO: Send Token information to your backend to initiate a charge
                        // Toast.makeText(getApplicationContext(), "Token created: " + token.getId(), Toast.LENGTH_LONG).show();

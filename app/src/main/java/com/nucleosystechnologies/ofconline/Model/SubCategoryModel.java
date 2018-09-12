@@ -13,6 +13,15 @@ public class SubCategoryModel {
    String zipcode;
    String state;
    String country;
+   String mobile;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
     public int getCategory_id() {
         return category_id;
