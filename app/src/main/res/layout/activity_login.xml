@@ -15,14 +15,14 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_marginLeft="50px"
         android:layout_marginRight="50px"
         android:layout_gravity="center"
         android:scaleType="fitXY"
         android:layout_marginTop="50dp"
         android:background="@drawable/logo"
-        android:layout_height="100dp" />
+        android:layout_height="120dp" />
 
     <com.nucleosystechnologies.ofconline.Utility.MyTextView
         android:layout_width="match_parent"

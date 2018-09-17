@@ -140,16 +140,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
-                return;
+
             }
-            else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]{Manifest.permission.CALL_PHONE},100);
-                return;
-            }
-            else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]{Manifest.permission.CAMERA},100);
-                return;
-            }
+
+
+
         }
 
         menu_content_adapter  menu_content_adapter =  new menu_content_adapter(getApplicationContext(),MenuName, ImageList);
@@ -340,11 +335,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             return true;
         }
         else  if (id == R.id.profile) {
-            Intent intent = new Intent(Dashboard.this,UserProfile.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("full_name","Hello User");
-            intent.putExtras(bundle);
-            startActivity(intent);
+            if(sharedPreferences.pref.getString(sharedPreferences.mast_id,"").isEmpty()) {
+
+                Intent intent = new Intent(Dashboard.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+            else {
+                Intent intent = new Intent(Dashboard.this, UserProfile.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("full_name", "Hello User");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
 
         }
         else  if (id == R.id.logout) {

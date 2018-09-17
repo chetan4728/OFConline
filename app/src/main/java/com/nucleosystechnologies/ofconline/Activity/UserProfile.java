@@ -64,6 +64,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -244,8 +245,7 @@ public class UserProfile extends AppCompatActivity {
                                 {
 
                                     Picasso.with(getApplicationContext()).load(API.PROFILE_PATH+jsonArray.getJSONObject(i).getString("user_profile")).placeholder(R.drawable.place).resize(400, 400)
-                                            .onlyScaleDown().transform(new CircleTransform())
-                                            .centerInside().into(image);
+                                            .into(image);
 
 
 
@@ -270,7 +270,7 @@ public class UserProfile extends AppCompatActivity {
                                  //   Toast.makeText(UserProfile.this, ""+jsonArray.getJSONObject(i).getInt("city"), Toast.LENGTH_SHORT).show();
                                     cc_id = jsonArray.getJSONObject(i).getInt("city");
                                     Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-                                    image.setImageBitmap(getclip(bitmap));
+                                    image.setImageBitmap(bitmap);
                                 }
 
 
@@ -588,71 +588,89 @@ public class UserProfile extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath = data.getData();
 
-            try {
+
 
 
                 //getting image from gallery
                 file = new File(getRealPathFromURI(filePath));
-
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-
-                //Setting image to ImageView
-                image.setBackground(null);
-
-
-                image.setImageBitmap(bitmap);
-
-                final ProgressDialog  progressDialog = new ProgressDialog(UserProfile.this);
-                progressDialog.setMessage("Uploading, please wait...");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-                
+            try {
+                file = new Compressor(getApplicationContext()).setQuality(100).compressToFile(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
-                Thread thread = new Thread() {
-                    @Override
-                    public void run() {
-                        String content_type = getMimeType(file.getPath());
+            long fileSizeInBytes = file.length();
+// Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+                long fileSizeInKB = fileSizeInBytes / 1024;
+// Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+                long fileSizeInMB = fileSizeInKB / 1024;
 
-                        String file_path = file.getAbsolutePath();
+                if (fileSizeInMB > 2) {
+                    Toast.makeText(UserProfile.this, "File size Too large upload less than 2 mb", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
 
-                        OkHttpClient client = new OkHttpClient();
-                        RequestBody file_body = RequestBody.create(MediaType.parse(content_type), file);
+                    //Setting image to ImageView
+                    image.setBackground(null);
 
-                        RequestBody request_body = new MultipartBody.Builder()
-                                .setType(MultipartBody.FORM)
-                                .addFormDataPart("type", content_type)
-                                .addFormDataPart("uploaded_file", file_path.substring(file_path.lastIndexOf("/") + 1), file_body)
-                                .addFormDataPart("mast_id",appSharedPreferences.pref.getString(appSharedPreferences.mast_id,""))
-                                .build();
-                        Log.d("bodyyyyy", String.valueOf(request_body));
 
-                        okhttp3.Request request = new okhttp3.Request.Builder()
-                                .url("http://ofconline.in/Builders/upload_image_pic")
-                                .post(request_body)
-                                .build();
-                        try {
-                            okhttp3.Response response = client.newCall(request).execute();
+                    image.setImageBitmap(bitmap);
 
-                            if (!response.isSuccessful()) {
-                                throw new IOException("Error : " + response);
+                    final ProgressDialog progressDialog = new ProgressDialog(UserProfile.this);
+                    progressDialog.setMessage("Uploading, please wait...");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+
+                    Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            String content_type = getMimeType(file.getPath());
+
+                            String file_path = file.getAbsolutePath();
+
+
+
+                            OkHttpClient client = new OkHttpClient();
+                            RequestBody file_body = RequestBody.create(MediaType.parse(content_type), file);
+
+                            RequestBody request_body = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("type", content_type)
+                                    .addFormDataPart("uploaded_file", file_path.substring(file_path.lastIndexOf("/") + 1), file_body)
+                                    .addFormDataPart("mast_id", appSharedPreferences.pref.getString(appSharedPreferences.mast_id, ""))
+                                    .build();
+                           // Log.d("bodyyyyy", String.valueOf(request_body));
+
+                            okhttp3.Request request = new okhttp3.Request.Builder()
+                                    .url("http://ofconline.in/Builders/upload_image_pic")
+                                    .post(request_body)
+                                    .build();
+                            try {
+                                okhttp3.Response response = client.newCall(request).execute();
+
+                                if (!response.isSuccessful()) {
+                                    throw new IOException("Error : " + response);
+                                }
+
+                                progressDialog.dismiss();
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-
-                            progressDialog.dismiss();
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-                    }
-                };
+                    };
 
-                thread.start();
+                    thread.start();
 
 
 // Alternatively, draw it to an canvas (e.g. in onDraw where a Canvas is available).
 // setBounds since there's no View handling size and positioning.
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         }
     }

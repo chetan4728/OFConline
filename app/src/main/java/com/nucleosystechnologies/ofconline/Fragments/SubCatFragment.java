@@ -92,7 +92,7 @@ public class SubCatFragment extends Fragment {
                                     Datalist.add(model);
                                 }
 
-                                SubCategoryAdapter subCategoryAdapter =  new SubCategoryAdapter(getActivity(),Datalist);
+                                SubCategoryAdapter subCategoryAdapter =  new SubCategoryAdapter(getActivity(),Datalist,getActivity());
                                 subcategory.setAdapter(subCategoryAdapter);
 
                                 pDialog.hide();

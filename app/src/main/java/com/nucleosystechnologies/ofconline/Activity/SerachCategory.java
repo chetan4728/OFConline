@@ -220,7 +220,7 @@ public class SerachCategory extends AppCompatActivity {
                                 }
 
 
-                                SubCategoryAdapter subCategoryAdapter =  new SubCategoryAdapter(getApplicationContext(),Datalistsecond);
+                                SubCategoryAdapter subCategoryAdapter =  new SubCategoryAdapter(getApplicationContext(),Datalistsecond,SerachCategory.this);
                                 searchresult.setAdapter(subCategoryAdapter);
 
                                 pDialog.hide();

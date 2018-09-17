@@ -1,16 +1,27 @@
 package com.nucleosystechnologies.ofconline.Activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -24,6 +35,7 @@ import com.nucleosystechnologies.ofconline.R;
 import com.nucleosystechnologies.ofconline.Utility.API;
 import com.nucleosystechnologies.ofconline.Utility.VolllyRequest;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +46,7 @@ import java.util.Map;
 
 public class SubCategory extends AppCompatActivity {
     ArrayList<SubCategoryModel> Datalist;
+     ListView subcategory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,15 +57,19 @@ public class SubCategory extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setTitle(getIntent().getExtras().getString("cate_name"));
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 100);
 
-
+            }
+        }
         final int category_id = getIntent().getExtras().getInt("Category_id");
 
         final String cat_id = String.valueOf(category_id).toString();
 
        // Toast.makeText(this, ""+cat_id, Toast.LENGTH_SHORT).show();
 
-        final ListView subcategory = (ListView)findViewById(R.id.subcategory);
+        subcategory = (ListView)findViewById(R.id.subcategory);
 
 
 
@@ -97,10 +114,12 @@ public class SubCategory extends AppCompatActivity {
                                     model.setZipcode(jsonArray.getJSONObject(i).getString("zipcode"));
                                     model.setImg_upload(jsonArray.getJSONObject(i).getString("user_profile"));
                                     model.setMobile(jsonArray.getJSONObject(i).getString("mobile"));
+                                    model.setCategory_name(jsonArray.getJSONObject(i).getString("name"));
+
                                     Datalist.add(model);
                                 }
 
-                                SubCategoryAdapter subCategoryAdapter =  new SubCategoryAdapter(getApplicationContext(),Datalist);
+                                SubCategoryAdapter subCategoryAdapter =  new SubCategoryAdapter(getApplicationContext(),Datalist,SubCategory.this);
                                 subcategory.setAdapter(subCategoryAdapter);
 
                                 pDialog.hide();
@@ -153,4 +172,5 @@ public class SubCategory extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
 }

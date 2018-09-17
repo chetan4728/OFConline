@@ -63,6 +63,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -120,7 +121,12 @@ public class PostAdd extends AppCompatActivity {
         actionBar.setTitle("Add Advertiesmnet");
 
         category = (Spinner) findViewById(R.id.category);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
 
+            }
+        }
 
         Datalist = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.GET, API.CATEGORY,
@@ -362,7 +368,13 @@ public class PostAdd extends AppCompatActivity {
 
                 //getting image from gallery
                  file = new File(getRealPathFromURI(filePath));
-
+                //getting image from gallery
+                file = new File(getRealPathFromURI(filePath));
+                try {
+                    file = new Compressor(getApplicationContext()).compressToFile(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 upload_flag = true;
                 //Setting image to ImageView
