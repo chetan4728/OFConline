@@ -112,7 +112,8 @@ public class SubCategoryAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                    OtpAlertMsg(view, "sms",cat.getCategory_name());
+                 String username = cat.getFirst_name()+" "+cat.getLast_name();
+                    OtpAlertMsg(view, "sms",cat.getCategory_name(),username);
 
             }
         });
@@ -177,7 +178,7 @@ public class SubCategoryAdapter extends BaseAdapter {
         dialog.show();
     }
 
-    public void OtpAlertMsg(View view, final String type,final String categiry_name)
+    public void OtpAlertMsg(View view, final String type, final String categiry_name, final String username)
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(view.getRootView().getContext());
 
@@ -227,6 +228,7 @@ else
             Map<String, String> params = new HashMap<>();
             params.put("msg", msg.getText().toString());
             params.put("name", String.valueOf(name));
+            params.put("user", String.valueOf(username));
             params.put("mast_id", String.valueOf(mast_id));
             params.put("type", String.valueOf(type));
             params.put("categiry_name", String.valueOf(categiry_name));
