@@ -29,6 +29,7 @@ public class OTPScreen extends AppCompatActivity {
         setContentView(R.layout.activity_otpscreen);
         Mobile_number  = (EditText)findViewById(R.id.otpmobile);
         ccp = (CountryCodePicker) findViewById(R.id.ccp);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
